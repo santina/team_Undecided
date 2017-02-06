@@ -7,6 +7,7 @@ biocLite("GEOquery")
 library(GEOquery)
 
 data <- getGEO("GSE85568")
+yoo <- getGEOfile("GSE85568")
 
 # OK so the above command does not work on my computer. I keep getting and error. 
 # Error in download.file(myurl, destfile, mode = mode, quiet = TRUE, method = getOption("download.file.method.GEOquery")) : 
