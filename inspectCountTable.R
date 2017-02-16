@@ -1,5 +1,4 @@
 # change yo directory 
-
 countdata <- read.table("~/Downloads/GSE85567_RNASeq_normalizedcounts.txt", row.names = 1, check.names = FALSE)
 samples <- read.table("~/Downloads/GSE85566_processed_meth_data_covarates.txt", sep=",", header= TRUE, row.names=1)
 
@@ -11,6 +10,8 @@ samplenames <- as.character(colnames(countdata))
 samples <- samples %>% filter(ID %in% samplenames)
 
 samplenames1 <- as.character(samples$ID)
+countdata <- countdata %>% select(samplenames1)
+countdata <- countdata %>% select(one_of(samplenames1))
 countdata <- countdata[,samplenames1]
 
 
