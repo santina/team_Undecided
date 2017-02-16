@@ -8,6 +8,18 @@ Our goal is to use the RNA-Seq and methylation profiles of Th2-high, Th2-low, an
 
 These analyses will be conducted on methylation and gene expression data collected from samples of airway epithelial cells. AEC samples were obtained and isolated from 81 adult subjects by bronchoscopy (3). Of the 81 subjects, 54 were classified as asthmatic patients while 27 were non-asthmatics (3). Gene expression and methylation data was generated using Illumina HiSeq 2000 and Infinium Human Methylation 450K Bead Chip platforms, respectively (3). Ultimately, this study will provide a novel means of identified upstream regulators of CLCA1, Periostin, and SerpinB2, which can be potential drug targets. Furthermore, by probing the functions of upstream genes, we will learn more about the underlying etiology of asthma. 
 
+##### References
+
+1. Pawankar, R. (2014). Allergic diseases and asthma: a global public health concern and a call to action. World Allergy Organization Journal, 7(1), 12.
+2. Wesolowska-Andersen, A., & Seibold, M. A. (2015). Airway molecular endotypes of asthma: dissecting the heterogeneity. Current opinion in allergy and clinical immunology, 15(2), 163.
+3. Nicodemus-Johnson, J., Myers, R. A., Sakabe, N. J., Sobreira, D. R., Hogarth, D. K., Naureckas, E. T., ... & Nicolae, D. L. (2016). DNA methylation in lung cells is associated with asthma endotypes and genetic risk. JCI insight, 1(20).
+4. Langfelder, P., & Horvath, S. (2008). WGCNA: an R package for weighted correlation network analysis. BMC bioinformatics, 9(1), 559.
+5. Lichtblau, Y., Zimmermann, K., Haldemann, B., Lenze, D., Hummel, M., & Leser, U. (2016). Comparative assessment of differential network analysis methods. Briefings in bioinformatics, bbw061.
+6. Gill, R., Datta, S., & Datta, S. (2010). A statistical framework for differential network analysis from microarray data. BMC bioinformatics, 11(1), 95.
+7. Ma, C., Xin, M., Feldmann, K. A., & Wang, X. (2014). Machine Learning–Based Differential Network Analysis: A Study of Stress-Responsive Transcriptomes in Arabidopsis. The Plant Cell, 26(2), 520-537.
+8. Ha, M. J., Baladandayuthapani, V., & Do, K. A. (2015). DINGO: differential network analysis in genomics. Bioinformatics, 31(21), 3413-3420.
+
+
 ##### Division of Labor 
 
 Member | Background | Tasks | Contributions
