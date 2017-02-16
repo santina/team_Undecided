@@ -17,7 +17,7 @@ Allison Tai | Computer science and Biochemistry | Cluster asthma patients and bu
 Eric Chu | Software engineering and Neuroscience | Identify preserved and non-preserved modules between each network and quantify the degree of module preservation through the calculation of module preservation statistics | Differential Network Analysis: identifying differentially expressed modules 
 Arjun Baghela | Biochemistry | Perform pathway analysis on the modules identified in each network and check to see if existing drugs can target affect these genes | Differential Network Analysis: pathway analysis within preserved and non-preserved modules; Biological interpretation; Differential Network Analysis: pathway analysis
 
-###### Detailed Aims/Methodologies 
+##### Detailed Aims/Methodologies 
 
 1. Normalize RNAseq and methylation array data to account for batch effects and within-sample variation
 	* RNAseq
