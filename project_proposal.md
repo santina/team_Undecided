@@ -28,19 +28,20 @@ Arjun Baghela | Biochemistry | Perform pathway analysis on the modules identifie
 
 2. Cluster all asthma patients using expression profiles of CLCA1, periostin and serpinB2 to create two subgroups of patients: high Th2 and low Th2 
 	* Subgroups will be defined by setting a boundary threshold (where above is high and below is low)
-	* Build integrated expression/methylation co-expression networks for subgroups (WGCNA) 
-	* Build separate gene expression and co-methylation networks for subgroup (WGCNA) 
+
+3. Build integrated expression/methylation co-expression networks for subgroups (WGCNA) 
+	* Build separate gene expression and co-methylation networks for subgroup to try (WGCNA) 
 	* Each network will have two different types of nodes: one type corresponding to CpG sites and other corresponding to the expression of a gene. 
 	* We will also build a network within our control group to produce three networks in total
 prune away uninformative nodes & edges
 
-3. DiNA (Try many R packages)
+4. DiNA (Try many R packages)
 	* Identify preserved and non-preserved modules within Th2-high, Th2-low and control patients
 	* Quantify the degree of preservation through the calculation of module preservation statistics
 
-4. Pathway Enrichment on Preserved Nodes/Modules. 
+5. Pathway Enrichment on Preserved Nodes/Modules. 
 
-5. Look at Drug Databases. 
+6. Look at Drug Databases. 
 	* Not sure to what extent we will be able to do this. 
 	* DrugBank.ca has an API which we can call. But we only get a free trial. 
 
