@@ -11,8 +11,7 @@ output: html_document
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(magrittr)
-library(edgeR)
-library(DESeq2)
+
 library(WGCNA)
 options(stringsAsFactors = FALSE)
 
@@ -29,8 +28,6 @@ metadata %>% group_by(Status) %>% tally()
 colnames(countdata) == metadata$ID
 countdata <- countdata[,metadata$ID]
 colnames(countdata) == metadata$ID
-
-meta <- meta %>% mutate(OverallLabel = paste0(meta$Treatment,"_",meta$Hour))
 
 colnames(countdata) <- paste0(colnames(countdata), "_", metadata$Status)
 
@@ -78,7 +75,7 @@ table(clust)
 # nSamples = nrow(datExpr)
 ```
 
-Check out some of the clinical data. How do clinical variables relate to the sample dendogram?
+Check out some of the clinical data. How do clinical variables relate to the sample dendogram? But first I will need to change the class of the variables. 
 ```{r}
 colnames(metadata)
 str(metadata)
@@ -90,41 +87,40 @@ metaWGCNA$Gender <- ifelse(metaWGCNA$Gender=="Male", 1, 0)
 metaWGCNA$current_smoker <- ifelse(metaWGCNA$current_smoker== "Y",1,0)
 metaWGCNA$Smoke_Ever <- ifelse(metaWGCNA$Smoke_Ever== "Y",1,0)
 
-# Still need to do this for ethnicigy 
 
-for(i in metaWGCNA)
+for(i in 1:length(metaWGCNA$Ethnicity)) {
+	if (metaWGCNA$Ethnicity[i] == "AA"){
+		metaWGCNA$Ethnicity[i]  = "0"
+		next
+	}
+	if (metaWGCNA$Ethnicity[i] == "EA"){
+		metaWGCNA$Ethnicity[i] = "1"
+		next
+	}
+	if (metaWGCNA$Ethnicity[i] == "Other"){
+		metaWGCNA$Ethnicity[i] = "2"
+		next
+	}
+}
 
+for(i in c(2:ncol(metaWGCNA))) {
+    metaWGCNA[,i] <- as.numeric(as.character(metaWGCNA[,i]))
+}
 
+rownames(tcount)
+metaWGCNA$ID
 
-
-
-# Re-cluster samples
-sampleTree2 = hclust(dist(datExpr), method = "average")
-# Convert traits to a color representation: white means low, red means high, grey means missing entry
-traitColors = numbers2colors(metadata$Age, signed = FALSE);
-# Plot the sample dendrogram and the colors underneath.
-plotDendroAndColors(sampleTree2, traitColors,groupLabels = names(metadata),
-main = "Sample dendrogram and trait heatmap")
+metaWGCNA <- metaWGCNA %>% select(-ID)
 ```
 
 
 ```{r}
-traitData = read.csv("~/Downloads/FemaleLiver-Data/ClinicalTraits.csv");
-dim(traitData)
-names(traitData)
-# remove columns that hold information we do not need.
-allTraits = traitData[, -c(31, 16)];
-allTraits = allTraits[, c(2, 11:36) ];
-dim(allTraits)
-names(allTraits)
-# Form a data frame analogous to expression data that will hold the clinical traits.
-femaleSamples = rownames(datExpr);
-traitRows = match(femaleSamples, allTraits$Mice);
-datTraits = allTraits[traitRows, -1];
-rownames(datTraits) = allTraits[traitRows, 1];
-collectGarbage();
-
-
-
+# Re-cluster samples
+sampleTree2 = hclust(dist(tcount), method = "average")
+# Convert traits to a color representation: white means low, red means high, grey means missing entry
+traitColors = numbers2colors(metaWGCNA, signed = FALSE);
+# Plot the sample dendrogram and the colors underneath.
+plotDendroAndColors(sampleTree2, traitColors,groupLabels = names(metaWGCNA),
+main = "Sample dendrogram and trait heatmap", addGuide = TRUE, guideCount= 85, autoColorHeight = FALSE)
 ```
 
