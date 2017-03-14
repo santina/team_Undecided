@@ -11,7 +11,6 @@ output: html_document
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(magrittr)
-
 library(WGCNA)
 options(stringsAsFactors = FALSE)
 
@@ -123,4 +122,5 @@ traitColors = numbers2colors(metaWGCNA, signed = FALSE);
 plotDendroAndColors(sampleTree2, traitColors,groupLabels = names(metaWGCNA),
 main = "Sample dendrogram and trait heatmap", addGuide = TRUE, guideCount= 85, autoColorHeight = FALSE)
 ```
+
 
