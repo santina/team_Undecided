@@ -1,0 +1,28 @@
+---
+title: "WGCNA Analysis"
+author: "Arjun Baghela"
+date: "March 12, 2017"
+output: html_document
+---
+# source("http://bioconductor.org/biocLite.R") 
+# biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))
+# install.packages(WGCNA)
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(WGCNA)
+options(stringsAsFactors = FALSE)
+
+```
+
+```{r}
+countdata <- read.table("Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
+metadata <- read.csv("Raw_Data/GSE85566_metadata.txt", row.names = 1)
+
+
+metadata %<>% filter(ID %in% colnames(countdata))
+
+
+```
+
