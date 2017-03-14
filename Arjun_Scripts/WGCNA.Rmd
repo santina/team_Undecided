@@ -46,6 +46,8 @@ countdata <- countdata[keep,]
 dim(countdata)
 ```
 
+
+This is for clustering the samples. In case we need to remove outlier samples. 
 ```{r}
 tcount <- as.data.frame(t(countdata))
 gsg <- goodSamplesGenes(tcount, verbose = 3)
@@ -60,7 +62,5 @@ par(cex = 0.6);
 par(mar = c(0,4,2,0))
 plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
 cex.axis = 1.5, cex.main = 2)
-
-
 ```
 
