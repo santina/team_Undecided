@@ -11,6 +11,8 @@ output: html_document
 ```{r}
 library(tidyverse)
 library(magrittr)
+library(edgeR)
+library(DESeq2)
 library(WGCNA)
 options(stringsAsFactors = FALSE)
 
@@ -20,8 +22,44 @@ options(stringsAsFactors = FALSE)
 countdata <- read.table("Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
 metadata <- read.csv("Raw_Data/GSE85566_metadata.txt", row.names = 1)
 
-
 metadata %<>% filter(ID %in% colnames(countdata))
+metadata %>% group_by(Status) %>% tally()
+
+colnames(countdata) == metadata$ID
+countdata <- countdata[,metadata$ID]
+colnames(countdata) == metadata$ID
+
+meta <- meta %>% mutate(OverallLabel = paste0(meta$Treatment,"_",meta$Hour))
+
+colnames(countdata) <- paste0(colnames(countdata), "_", metadata$Status)
+
+```
+
+Filters 
+```{r}
+noint <- rownames(countdata) %in% c("__no_feature","__ambiguous","__too_low_aQual", "__not_aligned","__alignment_not_unique")
+
+cpms <- cpm(countdata)
+keep <- rowSums(cpms >10) >= 25 & !noint
+countdata <- countdata[keep,]
+
+dim(countdata)
+```
+
+```{r}
+tcount <- as.data.frame(t(countdata))
+gsg <- goodSamplesGenes(tcount, verbose = 3)
+gsg$allOK # Not sure what verbose is quite yet. All are good. If not, will be False and we would have to filter them. Refer to WGCNA manual. 
+
+sampleTree = hclust(dist(tcount), method = "average");
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+sizeGrWindow(12,9)
+#pdf(file = "Plots/sampleClustering.pdf", width = 12, height = 9);
+par(cex = 0.6);
+par(mar = c(0,4,2,0))
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
+cex.axis = 1.5, cex.main = 2)
 
 
 ```
