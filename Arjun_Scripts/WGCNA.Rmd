@@ -8,7 +8,7 @@ output: html_document
 # biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))
 # install.packages(WGCNA)
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(magrittr)
 library(edgeR)
@@ -19,8 +19,9 @@ options(stringsAsFactors = FALSE)
 ```
 
 ```{r}
-countdata <- read.table("Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
-metadata <- read.csv("Raw_Data/GSE85566_metadata.txt", row.names = 1)
+getwd()
+countdata <- read.table(file= "Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
+metadata <- read.csv(file= "Raw_Data/GSE85566_metadata.txt", row.names = 1)
 
 metadata %<>% filter(ID %in% colnames(countdata))
 metadata %>% group_by(Status) %>% tally()
@@ -60,7 +61,70 @@ sizeGrWindow(12,9)
 #pdf(file = "Plots/sampleClustering.pdf", width = 12, height = 9);
 par(cex = 0.6);
 par(mar = c(0,4,2,0))
-plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,
-cex.axis = 1.5, cex.main = 2)
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5,cex.axis = 1.5, cex.main = 2)
+```
+
+If there are outlier samples, we can remove them by hand or do them by an automatic approach. 
+```{r, eval=FALSE, include=FALSE}
+# Plot a line to show the cut
+abline(h = 4.9e05, col = "red");
+# Determine cluster under the line
+clust = cutreeStatic(sampleTree, cutHeight = 4.9e05, minSize = 10)
+table(clust)
+# clust X contains the samples we want to keep.
+# keepSamples = (clust==1)
+# datExpr = tcount[keepSamples,]
+# nGenes = ncol(datExpr)
+# nSamples = nrow(datExpr)
+```
+
+Check out some of the clinical data. How do clinical variables relate to the sample dendogram?
+```{r}
+colnames(metadata)
+str(metadata)
+
+metaWGCNA <- metadata
+
+metaWGCNA$Status <- ifelse(metaWGCNA$Status== "Asthma", 1, 0)
+metaWGCNA$Gender <- ifelse(metaWGCNA$Gender=="Male", 1, 0)
+metaWGCNA$current_smoker <- ifelse(metaWGCNA$current_smoker== "Y",1,0)
+metaWGCNA$Smoke_Ever <- ifelse(metaWGCNA$Smoke_Ever== "Y",1,0)
+
+# Still need to do this for ethnicigy 
+
+for(i in metaWGCNA)
+
+
+
+
+
+# Re-cluster samples
+sampleTree2 = hclust(dist(datExpr), method = "average")
+# Convert traits to a color representation: white means low, red means high, grey means missing entry
+traitColors = numbers2colors(metadata$Age, signed = FALSE);
+# Plot the sample dendrogram and the colors underneath.
+plotDendroAndColors(sampleTree2, traitColors,groupLabels = names(metadata),
+main = "Sample dendrogram and trait heatmap")
+```
+
+
+```{r}
+traitData = read.csv("~/Downloads/FemaleLiver-Data/ClinicalTraits.csv");
+dim(traitData)
+names(traitData)
+# remove columns that hold information we do not need.
+allTraits = traitData[, -c(31, 16)];
+allTraits = allTraits[, c(2, 11:36) ];
+dim(allTraits)
+names(allTraits)
+# Form a data frame analogous to expression data that will hold the clinical traits.
+femaleSamples = rownames(datExpr);
+traitRows = match(femaleSamples, allTraits$Mice);
+datTraits = allTraits[traitRows, -1];
+rownames(datTraits) = allTraits[traitRows, 1];
+collectGarbage();
+
+
+
 ```
 
