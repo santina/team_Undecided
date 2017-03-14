@@ -5,9 +5,21 @@
 source("https://bioconductor.org/biocLite.R")
 biocLite("GEOquery")
 library(GEOquery)
+library(purrr)
 
-data <- getGEO("GSE85568")
+data_meth <- getGEO("GSE85566", getGPL = FALSE)
 yoo <- getGEOfile("GSE85568")
+
+load(raw_data/GSE85568)
+
+gds <- getGEO(filename="GSE85568.soft.gz")
+
+gds_eset <- GDS2eSet(gds@gsms[[1]]@dataTable)
+
+names <- purrr:map(gds, )
+
+p <- phenoData(gds@gsms[[1]]@dataTable)
+
 
 # OK so the above command does not work on my computer. I keep getting and error. 
 # Error in download.file(myurl, destfile, mode = mode, quiet = TRUE, method = getOption("download.file.method.GEOquery")) : 
