@@ -1,6 +1,6 @@
 # change yo directory 
-countdata <- read.table("~/Downloads/GSE85567_RNASeq_normalizedcounts.txt", row.names = 1, check.names = FALSE)
-samples <- read.table("~/Downloads/GSE85566_processed_meth_data_covarates.txt", sep=",", header= TRUE, row.names=1)
+countdata <- read.table("Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", row.names = 1, check.names = FALSE)
+samples <- read.table("Raw_Data/GSE85566_metadata.txt", sep=",", header= TRUE, row.names=1)
 
 library(DESeq2)
 library("ggplot2")
@@ -27,5 +27,3 @@ data <- plotPCA(vsd, intgroup=c("ID"), returnData=TRUE)
 percentVar <- round(100 * attr(data, "percentVar"))
 ggplot(data, aes(PC1, PC2, color=ID)) + geom_point(size=3) + xlab(paste0("PC1: ",percentVar[1],"% variance")) + ylab(paste0("PC2: ",percentVar[2],"% variance"))
 
-
-plo
