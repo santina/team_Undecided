@@ -11,7 +11,10 @@ output: html_document
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(magrittr)
+library(DESeq2)
+library(edgeR)
 library(WGCNA)
+
 options(stringsAsFactors = FALSE)
 
 ```
@@ -103,7 +106,7 @@ for(i in 1:length(metaWGCNA$Ethnicity)) {
 }
 
 for(i in c(2:ncol(metaWGCNA))) {
-    metaWGCNA[,i] <- as.numeric(as.character(metaWGCNA[,i]))
+    metaWGCNA[,i] <- as.numeric(metaWGCNA[,i])
 }
 
 rownames(tcount)
