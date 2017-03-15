@@ -57,11 +57,11 @@ str(tcount_1)
 
 ```{r}
 net = blockwiseModules(tcount_1, power = 14,
-TOMType = "unsigned", minModuleSize = 30,
+TOMType = "unsigned", minModuleSize = 1,
 reassignThreshold = 0, mergeCutHeight = 0.25,
 numericLabels = TRUE, pamRespectsDendro = FALSE,
 saveTOMs = TRUE,
-saveTOMFileBase = "AsthmaFuckers",
+saveTOMFileBase = "X",
 verbose = 3)
 ```
 
