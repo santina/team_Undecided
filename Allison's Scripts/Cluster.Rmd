@@ -1,0 +1,92 @@
+---
+title: "K-means clustering"
+author: "Allison Tai"
+date: "March 15, 2017"
+output: 
+  html_document: 
+    keep_md: yes
+---
+# source("http://bioconductor.org/biocLite.R") 
+# biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))
+# install.packages(WGCNA)
+
+```{r, message=FALSE, warning=FALSE}
+biocLite('biomaRt')
+library(tidyverse)
+library(magrittr)
+library(edgeR)
+library(WGCNA)
+library(biomaRt)
+options(stringsAsFactors = FALSE)
+```
+
+```{r}
+getwd()
+countdata <- read.table(file= "../Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
+metadata <- read.csv(file= "../Raw_Data/GSE85566_metadata.txt", row.names = 1)
+
+metadata %<>% filter(ID %in% colnames(countdata))
+metadata %>% group_by(Status) %>% tally()
+
+colnames(countdata) == metadata$ID
+countdata <- countdata[,metadata$ID]
+colnames(countdata) == metadata$ID
+```
+
+Extract the three relevant genes
+```{r}
+mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
+# time to grab the gene names to find our three genes
+countdata
+genes <- rownames(countdata)
+geneList <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id",
+"entrezgene", "description"),values=genes,mart= mart)
+# from our genes list, it looks like:
+# CLCA1 = ENSG00000016490
+# serpinB2 = ENSG00000197632
+# periostin = ENSG00000133110
+
+# now grab those rows
+trundata <- countdata[c("ENSG00000016490", "ENSG00000197632", "ENSG00000133110"),]
+```
+
+Let's cluster
+```{r}
+# check to make sure data is okay
+tcount <- as.data.frame(t(countdata))
+gsg <- goodSamplesGenes(tcount, verbose = 1)
+gsg$allOK # All are good. If not, will be False and we would have to filter them
+
+# now work with our genes
+kttrun <- as.data.frame(t(trundata))
+
+# add the status to ttrun
+ttrun$Status <- metadata$Status
+
+# separate asthmatics and control into two matrices using our added column
+matrixList <- split(ttrun, ttrun$Status)
+
+# now erase the added column
+asthma <- X$Asthma
+control <- X$Control
+asthma$Status <- NULL
+control$Status <- NULL
+
+geneCluster = kmeans(asthma,2,100,nstart=20);
+
+geneCluster$cluster <- as.factor(geneCluster$cluster)
+# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
+# The user should change the dimensions if the window is too large or too small.
+sizeGrWindow(12,12)
+```
+
+If there are outlier samples, we can remove them by hand or do them by an automatic approach. 
+```{r, eval=FALSE, include=FALSE}
+library(ggplot2)
+library(gridExtra)
+# let's make some plots
+p1 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
+p2 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000133110, color = geneCluster$cluster)) + geom_point()
+p3 <- ggplot(asthma, aes(ENSG00000133110, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
+grid.arrange(p1, p2, p3, nrow = 3)
+```
