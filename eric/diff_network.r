@@ -77,13 +77,11 @@ controlSamplesMetadata <- rawMetadata %>% filter(Status == "Control")
 
 # try running dna with differentially expressed genes
 
+# find genes with differential connectivity! - individual genes!
 asthmaExpression <- rawCountsT %>% filter(sample %in% asthmaSamplesMetadata$ID)
 asthmaExpression <- asthmaExpression[rownames(diffGenes)] %>% as.data.frame()
 controlExpression <- rawCountsT %>% filter(sample %in% controlSamplesMetadata$ID)
 controlExpression <- controlExpression[rownames(diffGenes)] %>% as.data.frame()
-
-
-# find genes with differential connectivity! - individual genes!
 geneLevelResult <- test.individual.genes(controlExpression, asthmaExpression, 
                                          scores = "cor", distance = "abs", 
                                          num.permutations = 1000)
