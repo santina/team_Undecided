@@ -1,0 +1,20 @@
+---
+title: "WGCNA_3-2b"
+author: "Arjun Baghela"
+date: "March 15, 2017"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(edgeR)
+library(DESeq2)
+
+library(WGCNA)
+options(stringsAsFactors = FALSE)
+# enableWGCNAThreads() Do not run this in RStudio. Will not work. Only works in R alone. 
+
+WGCNAnThreads()
+```
+
