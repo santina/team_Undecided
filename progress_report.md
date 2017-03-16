@@ -77,7 +77,7 @@ We will attempt to maximize the number of genes we can look at given our resourc
 
 From aim 2: patient clustering, we have obtained two clusters of patients corresponding to two different subgroups of asthmatics. In combination with the control group, we have three groups in total. 
 
-Separate correlation networks will be constructed for each group, using only the genes identified in the previous step. Each gene will be present as two nodes in the graph as it contains information from the expression as well as methylation data (methylation sites have been mapped to genes in aim 1); these correlation networks will contain hetergeous data types. The distance measure will simply be pearson's correlation in order to avoid biases introduced by the different scales in the two data types. 
+Separate correlation networks will be constructed for each group, using only the genes identified in the previous step. Each gene will be present as two nodes in the graph as it contains information from the expression as well as methylation data (methylation sites have been mapped to genes in aim 1); these correlation networks will contain hetergeous data types. The distance measure will simply be pearson's correlation in order to avoid biases introduced by the different scales in the two data types. As a result, the networks will be represented as correlation matrices with genes on both axes and each entry containing the correlation value of the corresponding two genes. 
 
 As part of network construction, we also plan to cluster genes into various modules. While these modules are interesting in their own right, they can help us perform different network analysis (more details below). 
 
@@ -88,9 +88,10 @@ We have already done some preliminary exploration of performing WGCNA analysis. 
 
 Once we have the networks, we plan to carry out differential network analysis. 
 
-So far, we have done some investigation using the dna package. This package assesses genes that are "differentially connected" to the rest of the network. We were able to find 
+So far, we have done some investigation using the dna package. This package assesses genes that are "differentially connected" to the rest of the network. In the preliminary analysis, we identified genes that are differentially expressed between control and patient groups and then used dna to find genes that have differential connectivity. It appears that in comparison to random genes, differentially expressed genes are more likely to also exhibit differential connectivity. The dna package is one way we will use to characterize the differences. 
 
-In code, the networks will be represented as simply correlation matrices with genes on both axes and each entry containing the correlation value of the corresponding two genes. The networks constructed using the three groups will have identical dimensions on both axes. Therefore, a difference value can be easily computed. By bootstrapping, we can obtain the distribution of these differences and subsquently deriving p-values to assess these differences in correlation. 
+
+In addition to dna, we will also develop our own differential netowrk analysis approach, specifically looking at differential correlations. In code, the networks will be represented as simply correlation matrices with genes on both axes and each entry containing the correlation value of the corresponding two genes. The networks constructed using the three groups will have identical dimensions on both axes. Therefore, a difference value can be easily computed. By bootstrapping, we can obtain the distribution of these differences and subsquently deriving p-values to assess these differences in correlation. 
 
 ### Multiple testing
 
@@ -103,10 +104,10 @@ These differential correlations will then inform our pathway analysis to arrive 
 
 ### Pathway analysis
 
-Within each network, we will only look at genes involved in pathways known to be involved in asthma. This will allow us to compare these pathways in Th2 high and Th2 low conditions relative to control, and give us an idea of what genes are more important in different pathways.
+The result of differential network analyses be a list of genes that are likely to play important roles in the asthma disease etiology. We will then perform pathway enrichment analyses to identify pathways corresponding to these genes. Informed by the existing literature, we can then attempt to interpret our findings in the context of biology. Pathway analyses can be done by accessing Gene Ontology, for example, and look at functions that are most represented by the genes we have identified. 
+
 
 ### Drug target identification (stretch goal)
 
-It would be nice if we can do 
-
+It is our stretch (actually uber stretch) goal to look at potential therapeutic targets drug availability. DrugBank.ca has an API which we can call. But we only get a free trial. Once we have identified genes relevant to asthma using this novel approach, and validated by pathway analysis, we can check against drug databases in an attempt to find potential drugs. We recognize that this part of the pipeline is still vague at this point. Details need to be work out in case we have the time and resource do so. 
 
