@@ -1,8 +1,12 @@
 ## Links
 
-Please see here for links to .md files containing details to our progress / preliminary analyses that we have done.
+Please see here for links to .md files containing details of our progress / preliminary analyses that we have done.
 
-
+[Aim 1 - PCA explorative analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/Emma/Quality_Control_RNAseq_Methylation.md)
+[Aim 2 - Patient clustering using k-means](https://github.com/STAT540-UBC/team_Undecided/blob/master/Allison_Scripts/Cluster.md)
+[Aim 3 - WGCNA modules analysis - Th2High](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2HighWGCNA.pdf)
+[Aim 3 - WGCNA modules analysis - Th2Low](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2LowWGCNA.pdf)
+[Aim 3 - WGCNA modules analysis - description and code](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/WGCNA.Rmd)
 
 
 ## Overview
@@ -38,6 +42,8 @@ Therefore, we will be using the data sets as they are, without any further modif
 
 ### Exploratory PCA
 
+[Aim 1 - PCA explorative analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/Emma/Quality_Control_RNAseq_Methylation.md)
+
 Initial proposal: implement Hidden Covariates with Prior algorithm (Mostafavi, et al, written in matlab) to adjust for known (GC bias, age, sex) and unknown (comorbidities, batch effects) covariates.
 
 When PCA is used to visualize the first two PCs of the data, we do not see any clusters based on known covariates. This means we don’t need to adjust for known covariates. We cannot use the HCP algorithm, because we do not have the unnormalized count table (we have the raw reads, however re-creating the count table from these reads would take extensive CPU time, which would detract from time allotted to other parts of the project). However, as can be seen in the results section, no visible clusters can be seen through PCA of our data. 
@@ -54,11 +60,13 @@ It is still possible for multiple probes to map to the same gene. In this case, 
 
 ## Aim 2: Patient clustering
 
+[Aim 2 - Patient clustering using k-means](https://github.com/STAT540-UBC/team_Undecided/blob/master/Allison_Scripts/Cluster.md)
+
 This step has remainted largely unchanged since our initial proposal. 
 
 We are using k-means, since we have a predefined number of clusters (chose 2). CLCA1 shows very clear high/level expression clusters, the other genes less so. We have 6 Th2-high and 51 Th2-low (though some in the low-group are better choices than others). 
 
-This, of course, results in an imbalanced dataset. We will likely perform bootstrapping to resolve this issue. 
+We're very excited to be able to find clusters corresponding to observations reported in the literature! This, of course, results in an imbalanced dataset. We will likely perform bootstrapping to resolve this issue. 
 
 
 ## Aim 3: Hypothesis testing
@@ -86,9 +94,13 @@ From aim 2: patient clustering, we have obtained two clusters of patients corres
 
 Separate correlation networks will be constructed for each group, using only the genes identified in the previous step. Each gene will be present as two nodes in the graph as it contains information from the expression as well as methylation data (methylation sites have been mapped to genes in aim 1); these correlation networks will contain hetergeous data types. The distance measure will simply be pearson's correlation in order to avoid biases introduced by the different scales in the two data types. As a result, the networks will be represented as correlation matrices with genes on both axes and each entry containing the correlation value of the corresponding two genes. 
 
-As part of network construction, we also plan to cluster genes into various modules. While these modules are interesting in their own right, they can help us perform different network analysis (more details below). 
+As part of network construction, we also plan to cluster genes into various modules. While these modules are interesting in their own right, they can help us perform different network analysis. For example, investigating module preservation statistics.  
 
-We have already done some preliminary exploration of performing WGCNA analysis. This is done using the entire expression dataset. More details here - 
+We have already done some preliminary exploration of performing WGCNA analysis. This is done using the entire expression dataset. See preliminary results: 
+
+[Aim 3 - WGCNA modules analysis - Th2High](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2HighWGCNA.pdf)
+[Aim 3 - WGCNA modules analysis - Th2Low](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2LowWGCNA.pdf)
+[Aim 3 - WGCNA modules analysis - description and code](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/WGCNA.Rmd)
 
 
 ### Differential network analysis
