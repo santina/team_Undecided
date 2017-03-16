@@ -56,24 +56,57 @@ This, of course, results in an imbalanced dataset. We will likely perform bootst
 
 ## Aim 3: Hypothesis testing
 
-This aim is the key step in our analysis where we investigate and test our hypothesis formally. It consists of 2 separate steps: network construction and differential network analysis. Details below:
+This aim is the key step in our analysis where we investigate and test our hypothesis formally. It consists of 3 distinct steps: gene filtering, network construction and differential network analysis.
+
+To reiterate, our hypothesis is that molecular differences between healthy controls and the two subgroups of asthma patients can be characterized by leveraging differential network analyses on gene expression and methylation data. In combination with aim 4: biological interpretation, we attempt to elucidate the disease etiology of asthma and potentially learn about therapeutic targets. 
+
+### Gene filtering
+
+The number of genes must be filtered into something manageable. The human genome consists of ~20,000 genes. Differentially network analysis approaches typically require computing connectivity information at some global level for assessing individual genes and edges. For example, in the dna package, the difference between one single gene between two networks is assessed by taking the difference between their connectivity to the rest of the network. Dingo computes partial correlations, also by taking global connectivity into account. This entails that these algorithms can take a long time to compute. It is, therefore, important that we narrow down to the genes that we're interested in. 
+
+There are a number of approaches to doing this. 
+
+We can conduct differential expression analysis to find the genes that are differentially expressed between controls and asthmatics. This list of genes would likely contain genes that play important roles in the disease mechanism. However, our preliminary investigaton using limma suggest that very few genes are differentially expressed; at a significant value of p-value = 0.05, only 6 genes were found. This may not give us enough power to detect differences.
+
+A more promising approach is to look at genes that are associated with relevant biological pathways. These pathways may be identified by quickly checking the Gene Ontology for the differentially expressed genes. More literature review will help us validate the role of these pathways in asthma. Once identified, we will focus on these genes in our subsequent analyses. 
+
+We will attempt to maximize the number of genes we can look at given our resources, maybe ~100 genes or so. 
+
 
 ### Network construction
 
-From aim 2: patient clustering, we have obtained two clusters of patients 
+From aim 2: patient clustering, we have obtained two clusters of patients corresponding to two different subgroups of asthmatics. In combination with the control group, we have three groups in total. 
 
+Separate correlation networks will be constructed for each group, using only the genes identified in the previous step. Each gene will be present as two nodes in the graph as it contains information from the expression as well as methylation data (methylation sites have been mapped to genes in aim 1); these correlation networks will contain hetergeous data types. The distance measure will simply be pearson's correlation in order to avoid biases introduced by the different scales in the two data types. 
+
+As part of network construction, we also plan to cluster genes into various modules. While these modules are interesting in their own right, they can help us perform different network analysis (more details below). 
+
+We have already done some preliminary exploration of performing WGCNA analysis. This is done using the entire expression dataset. More details here - 
 
 
 ### Differential network analysis
 
+Once we have the networks, we plan to carry out differential network analysis. 
 
+So far, we have done some investigation using the dna package. This package assesses genes that are "differentially connected" to the rest of the network. We were able to find 
+
+In code, the networks will be represented as simply correlation matrices with genes on both axes and each entry containing the correlation value of the corresponding two genes. The networks constructed using the three groups will have identical dimensions on both axes. Therefore, a difference value can be easily computed. By bootstrapping, we can obtain the distribution of these differences and subsquently deriving p-values to assess these differences in correlation. 
+
+### Multiple testing
+
+Since this procedure can only be done on pairs of networks, we would only be able to assess pairwise comparisons. Therefore, to detect significant differences, we will adjust for multiple testing. Our choice will likely be FDR. 
+
+These differential correlations will then inform our pathway analysis to arrive at appropriate biological interpretations.
 
 
 ## Aim 4: Biological interpretations
 
+### Pathway analysis
 
-### Pathway analys
+Within each network, we will only look at genes involved in pathways known to be involved in asthma. This will allow us to compare these pathways in Th2 high and Th2 low conditions relative to control, and give us an idea of what genes are more important in different pathways.
 
+### Drug target identification (stretch goal)
 
-### Drug target identification (maybe)
+It would be nice if we can do 
+
 
