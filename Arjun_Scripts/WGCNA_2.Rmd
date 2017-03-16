@@ -57,11 +57,23 @@ str(tcount_1)
 
 ```{r}
 net = blockwiseModules(tcount_1, power = 14,
-TOMType = "unsigned", minModuleSize = 1,
+TOMType = "unsigned", minModuleSize = 30,
 reassignThreshold = 0, mergeCutHeight = 0.25,
 numericLabels = TRUE, pamRespectsDendro = FALSE,
 saveTOMs = TRUE,
 saveTOMFileBase = "X",
 verbose = 3)
+
+# open a graphics window
+sizeGrWindow(12, 9)
+# Convert labels to colors for plotting
+mergedColors = labels2colors(net$colors)
+# Plot the dendrogram and the module colors underneath
+plotDendroAndColors(net$dendrograms[[1]], mergedColors[net$blockGenes[[1]]],
+"Module colors",
+dendroLabels = FALSE, hang = 0.03,
+addGuide = TRUE, guideHang = 0.05)
+
+
 ```
 
