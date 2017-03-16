@@ -31,7 +31,7 @@ colnames(countdata) == metadata$ID
 countdata <- countdata[,metadata$ID]
 colnames(countdata) == metadata$ID
 
-colnames(countdata) <- paste0(colnames(countdata), "_", metadata$Status)
+# colnames(countdata) <- paste0(colnames(countdata), "_", metadata$Status)
 
 ```
 
