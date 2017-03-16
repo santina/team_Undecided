@@ -65,7 +65,7 @@ fit <- eBayes(fit)
 
 diffGenes <- fit %>% topTable(coef = "StatusAsthma", 
                               number = Inf, adjust.method = "fdr",
-                              p.value = 0.2,
+                              p.value = 0.15,
                               sort.by = "p")
   
 
@@ -89,7 +89,7 @@ geneLevelResult <- test.individual.genes(controlExpression, asthmaExpression,
 
 # now try running it with random set of genes and see if we observe differences!
 
-randomGenes <- rawCounts$geneId %>% sample(51)
+randomGenes <- rawCounts$geneId %>% sample(7)
 asthmaExpressionRandom <- rawCountsT %>% filter(sample %in% asthmaSamplesMetadata$ID)
 asthmaExpressionRandom <- asthmaExpressionRandom[randomGenes] %>% as.data.frame()
 controlExpressionRandom <- rawCountsT %>% filter(sample %in% controlSamplesMetadata$ID)
@@ -100,26 +100,31 @@ geneLevelResultRandom <- test.individual.genes(controlExpressionRandom, asthmaEx
 
 
 
-# ----- sandbox (for reference) -----
+# ----- try running dna on different samples using differentially expressed genes -----
 
-data("HeavyMice")
-data("LeanMice")
 
-args(test.individual.genes)
+thHighSamples <- read_table("Eric_Scripts/data/th2_high_samples.txt")
+thLowSamples <- read_table("Eric_Scripts/data/th2_low_samples.txt")
+thHighExpression <- rawCountsT %>% filter(sample %in% thHighSamples$sample)
+thHighExpression <- thHighExpression[rownames(diffGenes)] %>% as.data.frame()
+thLowExpression <- rawCountsT %>% filter(sample %in% thLowSamples$sample)
+thLowExpression <- thLowExpression[rownames(diffGenes)] %>% as.data.frame()
+thResultGene <- test.individual.genes(thLowExpression, thHighExpression, 
+                                      scores = "cor", distance = "abs", 
+                                      num.permutations = 1000)
 
-# comparing connectivity between individual genes
-individualResult <- test.individual.genes(LeanMice, HeavyMice, 
-                                scores = "cor", distance = "abs", 
-                                rescale.scores = TRUE, num.permutations = 500)
 
-# result %>% get.results() %>% rownames_to_column() %>% as_tibble() %>% filter(p.value == 0) %>% arrange(rowname) %>% View()
 
-# comparing connectivity between gene sets
 
-genes <- c("AA408451", "BC010552", "BC026585")
-geneSetResult <- test.class.genes(LeanMice, HeavyMice, genelist = genes,
-                                  scores = "cor", distance = "abs",
-                                  rescale.scores = TRUE, num.permutations = 500)
+thHighExpressionRandom <- rawCountsT %>% filter(sample %in% thHighSamples$sample)
+thHighExpressionRandom <- thHighExpressionRandom[randomGenes] %>% as.data.frame()
+thLowExpressionRandom <- rawCountsT %>% filter(sample %in% thLowSamples$sample)
+thLowExpressionRandom <- thLowExpressionRandom[randomGenes] %>% as.data.frame()
+thResultGeneRandom <- test.individual.genes(thLowExpressionRandom, thHighExpressionRandom, 
+                                            scores = "cor", distance = "abs",
+                                            rescale.scores = TRUE, num.permutations = 600)
+
+
 
 
 

@@ -10,7 +10,7 @@ output:
 # biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))
 # install.packages(WGCNA)
 
-```{r, message=FALSE, warning=FALSE}
+```{r}
 biocLite('biomaRt')
 library(tidyverse)
 library(magrittr)
