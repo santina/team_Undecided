@@ -58,19 +58,14 @@ gsg <- goodSamplesGenes(tcount, verbose = 1)
 gsg$allOK # All are good. If not, will be False and we would have to filter them
 
 # now work with our genes
-kttrun <- as.data.frame(t(trundata))
-
-# add the status to ttrun
-ttrun$Status <- metadata$Status
+ttrun <- as.data.frame(t(trundata))
 
 # separate asthmatics and control into two matrices using our added column
-matrixList <- split(ttrun, ttrun$Status)
+matrixList <- split(ttrun, metadata$Status)
+matrixList2 <- split(tcount, metadata$Status)
 
-# now erase the added column
-asthma <- X$Asthma
-control <- X$Control
-asthma$Status <- NULL
-control$Status <- NULL
+# now grab the patients and cluster
+asthma <- matrixList$Asthma
 
 geneCluster = kmeans(asthma,2,100,nstart=20);
 
@@ -78,9 +73,12 @@ geneCluster$cluster <- as.factor(geneCluster$cluster)
 # Plot the sample tree: Open a graphic output window of size 12 by 9 inches
 # The user should change the dimensions if the window is too large or too small.
 sizeGrWindow(12,12)
+
+# add clusters to count matrix
+matrixList$Asthma$cluster = geneCluster$cluster
 ```
 
-If there are outlier samples, we can remove them by hand or do them by an automatic approach. 
+Now let's draw some graphs and look at our clusters
 ```{r, eval=FALSE, include=FALSE}
 library(ggplot2)
 library(gridExtra)
