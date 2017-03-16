@@ -98,9 +98,9 @@ As part of network construction, we also plan to cluster genes into various modu
 
 We have already done some preliminary exploration of performing WGCNA analysis. This is done using the entire expression dataset. See preliminary results: 
 
-[Aim 3 - WGCNA modules analysis - Th2High](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2HighWGCNA.pdf)
-[Aim 3 - WGCNA modules analysis - Th2Low](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2LowWGCNA.pdf)
-[Aim 3 - WGCNA modules analysis - description and code](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/WGCNA.Rmd)
+* [Aim 3 - WGCNA modules analysis - Th2High](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2HighWGCNA.pdf)
+* [Aim 3 - WGCNA modules analysis - Th2Low](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2LowWGCNA.pdf)
+* [Aim 3 - WGCNA modules analysis - description and code](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/WGCNA.Rmd)
 
 
 ### Differential network analysis
