@@ -88,6 +88,7 @@ Now let's draw some graphs and look at our clusters
 library(ggplot2)
 library(gridExtra)
 # let's make some plots
+png(filename="k_means.png")
 p1 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
 p2 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000133110, color = geneCluster$cluster)) + geom_point()
 p3 <- ggplot(asthma, aes(ENSG00000133110, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
