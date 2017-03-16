@@ -7,11 +7,12 @@ Please see here for links to .md files containing details of our progress / prel
 * [Aim 3 - WGCNA modules analysis - Th2High](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2HighWGCNA.pdf)
 * [Aim 3 - WGCNA modules analysis - Th2Low](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2LowWGCNA.pdf)
 * [Aim 3 - WGCNA modules analysis - description and code](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/WGCNA.Rmd)
+* [Aim 3 - Preliminary differential expression and differential network analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/Eric_Scripts/preliminary_dna_analysis.md)
 
 
 ## Overview
 
-While major components of our analysis pipeline have remained the same from our initial propsal, we have made a small number of modifications, mostly surrounding the details of our methods. These ammendments have been informed by the progress of exploratory investigations as well as consultation with the course instructors. We have given a high level description of these changes and our current progress in this document. Links to individual .md files containing more details have been linked.
+While major components of our analysis pipeline have remained the same from our initial propsal, we have made a small number of modifications, mostly surrounding the details of our methods. These ammendments have been informed by the progress of exploratory investigations as well as consultation with the course instructors. We have given a high level description of these changes and our current progress in this document. Links to individual .md files containing more details have been included.
 
 Our datasets have remained the same; we are analyzing two data sets in conjunction: a gene expression dataset and a methylation dataset. The data were collected from airway epithelial cells of asthma patients and healthy controls. 
 
@@ -81,7 +82,7 @@ The number of genes must be filtered into something manageable. The human genome
 
 There are a number of approaches to doing this. 
 
-We can conduct differential expression analysis to find the genes that are differentially expressed between controls and asthmatics. This list of genes would likely contain genes that play important roles in the disease mechanism. However, our preliminary investigaton using limma suggest that very few genes are differentially expressed; at a significant value of p-value = 0.05, only 6 genes were found. This may not give us enough power to detect differences.
+We can conduct differential expression analysis to find the genes that are differentially expressed between controls and asthmatics. This list of genes would likely contain genes that play important roles in the disease mechanism. However, our preliminary investigaton using limma suggest that very few genes are differentially expressed; at a significant value of fdr = 0.05, only 6 genes were found. This may not give us enough power to detect differences. - [Aim 3 - Preliminary differential expression and differential network analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/Eric_Scripts/preliminary_dna_analysis.md)
 
 A more promising approach is to look at genes that are associated with relevant biological pathways. These pathways may be identified by quickly checking the Gene Ontology for the differentially expressed genes. More literature review will help us validate the role of these pathways in asthma. Once identified, we will focus on these genes in our subsequent analyses. 
 
@@ -105,10 +106,11 @@ We have already done some preliminary exploration of performing WGCNA analysis. 
 
 ### Differential network analysis
 
+[Aim 3 - Preliminary differential expression and differential network analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/Eric_Scripts/preliminary_dna_analysis.md)
+
 Once we have the networks, we plan to carry out differential network analysis. 
 
 So far, we have done some investigation using the dna package. This package assesses genes that are "differentially connected" to the rest of the network. In the preliminary analysis, we identified genes that are differentially expressed between control and patient groups and then used dna to find genes that have differential connectivity. It appears that in comparison to random genes, differentially expressed genes are more likely to also exhibit differential connectivity. The dna package is one way we will use to characterize the differences. 
-
 
 In addition to dna, we will also develop our own differential netowrk analysis approach, specifically looking at differential correlations. In code, the networks will be represented as simply correlation matrices with genes on both axes and each entry containing the correlation value of the corresponding two genes. The networks constructed using the three groups will have identical dimensions on both axes. Therefore, a difference value can be easily computed. By bootstrapping, we can obtain the distribution of these differences and subsquently deriving p-values to assess these differences in correlation. 
 
