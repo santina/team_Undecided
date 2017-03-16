@@ -2,11 +2,11 @@
 
 Please see here for links to .md files containing details of our progress / preliminary analyses that we have done.
 
-[Aim 1 - PCA explorative analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/Emma/Quality_Control_RNAseq_Methylation.md)
-[Aim 2 - Patient clustering using k-means](https://github.com/STAT540-UBC/team_Undecided/blob/master/Allison_Scripts/Cluster.md)
-[Aim 3 - WGCNA modules analysis - Th2High](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2HighWGCNA.pdf)
-[Aim 3 - WGCNA modules analysis - Th2Low](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2LowWGCNA.pdf)
-[Aim 3 - WGCNA modules analysis - description and code](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/WGCNA.Rmd)
+* [Aim 1 - PCA explorative analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/Emma/Quality_Control_RNAseq_Methylation.md)
+* [Aim 2 - Patient clustering using k-means](https://github.com/STAT540-UBC/team_Undecided/blob/master/Allison_Scripts/Cluster.md)
+* [Aim 3 - WGCNA modules analysis - Th2High](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2HighWGCNA.pdf)
+* [Aim 3 - WGCNA modules analysis - Th2Low](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/Th2LowWGCNA.pdf)
+* [Aim 3 - WGCNA modules analysis - description and code](https://github.com/STAT540-UBC/team_Undecided/blob/master/Arjun_Scripts/WGCNA.Rmd)
 
 
 ## Overview
