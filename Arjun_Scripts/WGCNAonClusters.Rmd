@@ -1,0 +1,209 @@
+---
+title: "WGCNA on Clusters"
+author: "Arjun Baghela"
+date: "March 15, 2017"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+library(magrittr)
+library(DESeq2)
+library(edgeR)
+library(WGCNA)
+
+options(stringsAsFactors = FALSE)
+```
+
+```{r}
+metadataX <- read.csv("Allison_Scripts/metaCluster.csv", row.names = 1)
+
+tcountX <- tcount
+
+str(metadataX)
+metadataXHigh <- metadataX %>% filter(cluster== 1)
+metadataXLow <- metadataX %>% filter(cluster == 2)
+metadataXCon <- metadataX %>% filter(cluster == 0)
+
+tcountX <- rownames_to_column(tcountX, var="Sample")
+
+tcountXHigh <- tcountX %>% filter(Sample %in% metadataXHigh$ID)
+tcountXLow <- tcountX %>% filter(Sample %in% metadataXLow$ID)
+tcountXCon <- tcountX %>% filter(Sample %in% metadataXCon$ID)
+
+tcountXHigh <- tcountXHigh %>% column_to_rownames(var="Sample")
+tcountXLow <- tcountXLow %>% column_to_rownames(var="Sample")
+tcountXCon <- tcountXCon %>% column_to_rownames(var="Sample")
+
+```
+
+
+WGCNA FOR HIGH. 
+```{r}
+# Choose a set of soft-thresholding powers
+powersHigh = c(c(1:10), seq(from = 12, to=20, by=2))
+# Call the network topology analysis function
+sftHigh = pickSoftThreshold(tcountXHigh, powerVector = powersHigh, verbose = 5)
+# Plot the results:
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
+# Scale-free topology fit index as a function of the soft-thresholding power
+plot(sftHigh$fitIndices[,1], -sign(sftHigh$fitIndices[,3])*sftHigh$fitIndices[,2],
+xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+main = paste("Scale independence"));
+text(sftHigh$fitIndices[,1], -sign(sftHigh$fitIndices[,3])*sftHigh$fitIndices[,2],
+labels=powersHigh,cex=cex1,col="red");
+# this line corresponds to using an R^2 cut-off of h
+abline(h=0.90,col="red")
+# Mean connectivity as a function of the soft-thresholding power
+plot(sftHigh$fitIndices[,1], sftHigh$fitIndices[,5],
+xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+main = paste("Mean connectivity"))
+text(sftHigh$fitIndices[,1], sftHigh$fitIndices[,5], labels=powersHigh, cex=cex1,col="red")
+
+
+
+tcount_1High <- tcountXHigh
+for(i in c(1:ncol(tcount_1High))) {
+    tcount_1High[,i] <- as.numeric(tcount_1High[,i])
+}
+
+str(tcount_1High)
+
+
+
+netHigh = blockwiseModules(tcount_1High, power = 14,
+TOMType = "unsigned", minModuleSize = 30,
+reassignThreshold = 0, mergeCutHeight = 0.25,
+numericLabels = TRUE, pamRespectsDendro = FALSE,
+saveTOMs = TRUE,
+saveTOMFileBase = "X",
+verbose = 3)
+
+# open a graphics window
+sizeGrWindow(12, 9)
+# Convert labels to colors for plotting
+mergedColorsHigh = labels2colors(netHigh$colors)
+# Plot the dendrogram and the module colors underneath
+plotDendroAndColors(netHigh$dendrograms[[1]], main= "Th2 High", mergedColorsHigh[netHigh$blockGenes[[1]]],
+"Module colors",
+dendroLabels = FALSE, hang = 0.03,
+addGuide = TRUE, guideHang = 0.05)
+
+```
+
+
+
+WGCNA for LOW. 
+```{r}
+
+# Choose a set of soft-thresholding powers
+powersLow = c(c(1:10), seq(from = 12, to=20, by=2))
+# Call the network topology analysis function
+sftLow = pickSoftThreshold(tcountXLow, powerVector = powersLow, verbose = 5)
+# Plot the results:
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
+# Scale-free topology fit index as a function of the soft-thresholding power
+plot(sftLow$fitIndices[,1], -sign(sftLow$fitIndices[,3])*sftLow$fitIndices[,2],
+xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+main = paste("Scale independence"));
+text(sftLow$fitIndices[,1], -sign(sftLow$fitIndices[,3])*sftLow$fitIndices[,2],
+labels=powersLow,cex=cex1,col="red");
+# this line corresponds to using an R^2 cut-off of h
+abline(h=0.90,col="red")
+# Mean connectivity as a function of the soft-thresholding power
+plot(sftLow$fitIndices[,1], sftLow$fitIndices[,5],
+xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+main = paste("Mean connectivity"))
+text(sftLow$fitIndices[,1], sftLow$fitIndices[,5], labels=powersLow, cex=cex1,col="red")
+
+
+
+tcount_1Low <- tcountXLow
+for(i in c(1:ncol(tcount_1Low))) {
+    tcount_1Low[,i] <- as.numeric(tcount_1Low[,i])
+}
+
+str(tcount_1Low)
+
+
+
+netLow = blockwiseModules(tcount_1Low, power = 14,
+TOMType = "unsigned", minModuleSize = 30,
+reassignThreshold = 0, mergeCutHeight = 0.25,
+numericLabels = TRUE, pamRespectsDendro = FALSE,
+saveTOMs = TRUE,
+saveTOMFileBase = "X",
+verbose = 3)
+
+# open a graphics window
+sizeGrWindow(12, 9)
+# Convert labels to colors for plotting
+mergedColorsLow = labels2colors(netLow$colors)
+# Plot the dendrogram and the module colors underneath
+plotDendroAndColors(netLow$dendrograms[[1]], main= "Th2 Low", mergedColorsLow[netLow$blockGenes[[1]]],
+"Module colors",
+dendroLabels = FALSE, hang = 0.03,
+addGuide = TRUE, guideHang = 0.05)
+
+```
+
+```{r}
+
+# Choose a set of soft-thresholding powers
+powersLow = c(c(1:10), seq(from = 12, to=20, by=2))
+# Call the network topology analysis function
+sftLow = pickSoftThreshold(tcountXLow, powerVector = powersLow, verbose = 5)
+# Plot the results:
+sizeGrWindow(9, 5)
+par(mfrow = c(1,2));
+cex1 = 0.9;
+# Scale-free topology fit index as a function of the soft-thresholding power
+plot(sftLow$fitIndices[,1], -sign(sftLow$fitIndices[,3])*sftLow$fitIndices[,2],
+xlab="Soft Threshold (power)",ylab="Scale Free Topology Model Fit,signed R^2",type="n",
+main = paste("Scale independence"));
+text(sftLow$fitIndices[,1], -sign(sftLow$fitIndices[,3])*sftLow$fitIndices[,2],
+labels=powersLow,cex=cex1,col="red");
+# this line corresponds to using an R^2 cut-off of h
+abline(h=0.90,col="red")
+# Mean connectivity as a function of the soft-thresholding power
+plot(sftLow$fitIndices[,1], sftLow$fitIndices[,5],
+xlab="Soft Threshold (power)",ylab="Mean Connectivity", type="n",
+main = paste("Mean connectivity"))
+text(sftLow$fitIndices[,1], sftLow$fitIndices[,5], labels=powersLow, cex=cex1,col="red")
+
+
+
+tcount_1Low <- tcountXLow
+for(i in c(1:ncol(tcount_1Low))) {
+    tcount_1Low[,i] <- as.numeric(tcount_1Low[,i])
+}
+
+str(tcount_1Low)
+
+
+
+netLow = blockwiseModules(tcount_1Low, power = 14,
+TOMType = "unsigned", minModuleSize = 30,
+reassignThreshold = 0, mergeCutHeight = 0.25,
+numericLabels = TRUE, pamRespectsDendro = FALSE,
+saveTOMs = TRUE,
+saveTOMFileBase = "X",
+verbose = 3)
+
+# open a graphics window
+sizeGrWindow(12, 9)
+# Convert labels to colors for plotting
+mergedColorsLow = labels2colors(netLow$colors)
+# Plot the dendrogram and the module colors underneath
+plotDendroAndColors(netLow$dendrograms[[1]], main= "Th2 Low", mergedColorsLow[netLow$blockGenes[[1]]],
+"Module colors",
+dendroLabels = FALSE, hang = 0.03,
+addGuide = TRUE, guideHang = 0.05)
+
+```
+
