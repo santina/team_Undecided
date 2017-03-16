@@ -74,8 +74,13 @@ geneCluster$cluster <- as.factor(geneCluster$cluster)
 # The user should change the dimensions if the window is too large or too small.
 sizeGrWindow(12,12)
 
-# add clusters to count matrix
-matrixList$Asthma$cluster = geneCluster$cluster
+# add clusters to metadata
+metadata$cluster <- 0
+for (i in 1:57) {
+ x <- which(metadata$ID == rownames(asthma)[i])
+  metadata[x, 9] = asthma[i,4]
+}
+write.csv(metadata, "metaCluster.csv")
 ```
 
 Now let's draw some graphs and look at our clusters
