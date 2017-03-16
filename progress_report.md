@@ -1,6 +1,13 @@
+## Links
+
+Please see here for links to .md files containing details to our progress / preliminary analyses that we have done.
+
+
+
+
 ## Overview
 
-While major components of our analysis pipeline have remained the same from our initial propsal, we have made a small number of modifications, mostly surrounding the details of our methods. These ammendments have been informed by the progress of exploratory investigations as well as consultation with the course instructors. We have given a high level description of these changes and our current progress in this document. Links to individual .md files containing more details have been linked for each component.
+While major components of our analysis pipeline have remained the same from our initial propsal, we have made a small number of modifications, mostly surrounding the details of our methods. These ammendments have been informed by the progress of exploratory investigations as well as consultation with the course instructors. We have given a high level description of these changes and our current progress in this document. Links to individual .md files containing more details have been linked.
 
 Our datasets have remained the same; we are analyzing two data sets in conjunction: a gene expression dataset and a methylation dataset. The data were collected from airway epithelial cells of asthma patients and healthy controls. 
 
@@ -109,5 +116,5 @@ The result of differential network analyses be a list of genes that are likely t
 
 ### Drug target identification (stretch goal)
 
-It is our stretch (actually uber stretch) goal to look at potential therapeutic targets drug availability. DrugBank.ca has an API which we can call. But we only get a free trial. Once we have identified genes relevant to asthma using this novel approach, and validated by pathway analysis, we can check against drug databases in an attempt to find potential drugs. We recognize that this part of the pipeline is still vague at this point. Details need to be work out in case we have the time and resource do so. 
+It is our stretch (actually uber stretch) goal to look at potential therapeutic targets and drug availability. DrugBank.ca has an API which we can call. But we only get a free trial. Once we have identified genes relevant to asthma using this novel approach, and validated by pathway analysis, we can check against drug databases in an attempt to find potential drugs. We recognize that this part of the pipeline is still vague at this point. Details need to be work out in case we have the time and resource do so. 
 

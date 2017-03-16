@@ -4,11 +4,23 @@ author: "Arjun Baghela"
 date: "March 12, 2017"
 output: html_document
 ---
+
+
+## Description: 
+
+My task for the assignment has been to “Perform pathway analysis on the modules identified in each network and check to see if existing drugs can target affect these genes”. But as expected, I am not really quite there yet. As Amrit pointed out, our analysis is kind of like a pipeline, so other people’s outputs are other people’s inputs. In addition, as more discussions have been had and more lines of code written, we have slowly been realizing what needs more attention and what needs changing. I have mainly been working on WGCNA gene module detection. The algorithm is detecting modules of genes that are coexpressed with each other. We are doing this for Th2 low, high and control patients. At this point, I can make the modules, but I am not sure how to interpret them or even if the parameters I used were appropriate. I am also confused about how WGCNA output will be appropriate with Eric’s DiNA part. I still really need to dig deeper into WGCNA and how it can help us. I know that it is possible to do module preservation statistics between modules, but that is not really what we want to do. 
+
+Other than that, I have been organizing the Github repository, cleaning up the RNA-Seq reads (removing genes that may not be important due to low read coverage). I have also downloaded the raw sequence data from GEO. It is in a SRA format, so I am currently trying to figure out how to convert this to FASTQ files. I downloaded the NCBI SRA Toolkit, but it does the conversion VERY slow, so I am not sure how this will work. My main intention of doing this was to check the read quality with FastQC. 
+
+
+
+```{r, message=FALSE, warning=FALSE}
+
+# installation codes for WGCNA
 # source("http://bioconductor.org/biocLite.R") 
 # biocLite(c("AnnotationDbi", "impute", "GO.db", "preprocessCore"))
 # install.packages(WGCNA)
 
-```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 library(magrittr)
 library(DESeq2)
