@@ -99,4 +99,8 @@ p1 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000197632, color = geneCluster$c
 p2 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000133110, color = geneCluster$cluster)) + geom_point()
 p3 <- ggplot(asthma, aes(ENSG00000133110, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
 grid.arrange(p1, p2, p3, nrow = 3)
+
+# save
+g <- arrangeGrob(p1, p2, p3, nrow=3) #generates g
+ggsave(file="k_means.png", g) #saves g
 ```
