@@ -44,7 +44,7 @@
 "43","2239_4ef1","Asthma","Female",58,"AA","N","N","0",1
 "44","502d_4e7d","Asthma","Female",32,"EA","N","N","0",1
 "45","ad5c_4ce5","Control","Female",34,"EA","N","N","0",0
-"46","9c8b_4a61","Asthma","Male",44,"AA","N","N","0",2
+"46","9c8b_4a61","Asthma","Male",44,"AA","N","N","0",1
 "47","1ba9_4d79","Control","Female",20,"EA","N","N","0",0
 "48","06f5_4503","Asthma","Female",37,"AA","N","N","0",1
 "49","6ebc_47ef","Asthma","Female",60,"EA","N","N","0",2
@@ -62,7 +62,7 @@
 "61","39e9_4475","Control","Female",24,"EA","N","N","0",0
 "62","8cd5_4d95","Asthma","Female",32,"EA","N","Y","0.4",2
 "63","86b9_4119","Control","Female",51,"AA","N","Y",".",0
-"64","767f_4e2a","Asthma","Male",62,"AA","N","Y","3.5",2
+"64","767f_4e2a","Asthma","Male",62,"AA","N","Y","3.5",1
 "65","107e_4776","Asthma","Male",20,"AA","N","N","0",1
 "66","154f_455f","Control","Male",33,"AA","N","N","0",0
 "67","179c_43ec","Asthma","Female",55,"AA","N","N","0",1
@@ -74,8 +74,8 @@
 "73","d93e_43a4","Asthma","Female",50,"EA","N","Y","20",2
 "74","87f0_42ad","Asthma","Female",53,"EA","N","N","0",2
 "75","3348_4c75","Control","Female",21,"EA","N","N","0",0
-"76","36b7_4822","Asthma","Female",24,"AA","N","N","0",2
-"77","cd0c_4cca","Asthma","Male",26.73424658,"AA","N","N","0",2
+"76","36b7_4822","Asthma","Female",24,"AA","N","N","0",1
+"77","cd0c_4cca","Asthma","Male",26.73424658,"AA","N","N","0",1
 "78","1f64_4727","Control","Male",24,"EA","N","N","0",0
 "79","f964_47ea","Asthma","Female",48.10684932,"AA","N","Y","0.25",1
 "80","2cfc_42e1","Asthma","Female",37,"AA","N","N","0",2

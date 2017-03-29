@@ -60,17 +60,19 @@ gsg$allOK # All are good. If not, will be False and we would have to filter them
 
 # now work with our genes
 ttrun <- as.data.frame(t(trundata))
-ttrun <- log(ttrun)
+ttrun <- log2(ttrun)
 
 # replace -inf with 0
 ttrun[ttrun == -Inf] <- 0
+# center and scale our gene expression
+ttrunSC <- data.frame(scale(ttrun))
 
 # separate asthmatics and control into two matrices using our added column
-matrixList <- split(ttrun, metadata$Status)
+matrixList <- split(ttrunSC, metadata$Status)
 matrixList2 <- split(tcount, metadata$Status)
 
 # now grab the patients and cluster
-asthma <- matrixList$Asthma
+asthma <- data.frame(matrixList$Asthma)
 
 geneCluster = kmeans(asthma,2,100,nstart=20);
 
