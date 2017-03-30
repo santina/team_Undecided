@@ -9,7 +9,6 @@ This is differential expression for controls vs asthma. In this script I am not 
 
 ```{r}
 library(edgeR)
-library(DESeq2)
 library(limma)
 library(tidyverse)
 library(magrittr)

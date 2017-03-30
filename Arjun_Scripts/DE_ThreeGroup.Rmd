@@ -1,0 +1,134 @@
+---
+title: "Differential Expression 3 Group"
+author: "Arjun Baghela"
+date: "3/29/2017"
+output: html_document
+---
+
+```{r}
+library(edgeR)
+library(limma)
+library(tidyverse)
+library(magrittr)
+library(DESeq2)
+```
+
+```{r}
+countdata <- read.table(file= "Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
+metadata <- read.csv(file= "Allison_Scripts/metaCluster.csv", row.names = 1)
+
+metadata %<>% filter(ID %in% colnames(countdata))
+
+metadata %>% group_by(Status) %>% tally()
+
+metadata %<>% arrange(cluster)
+metadata %>% group_by(cluster) %>% tally()
+
+countdata <- countdata[,as.character(metadata$ID)]
+colnames(countdata) == metadata$ID
+
+metadata$cluster <- as.factor(metadata$cluster)
+str(metadata)
+```
+
+```{r}
+DGElist <- DGEList(counts= countdata, group= metadata$cluster)
+DGElist$samples$lib.size %>% min()
+DGElist$counts %>% nrow()
+
+keep <- rowSums(cpm(DGElist)>0.275) >= 28
+
+DGElistFilt <- DGElist[keep, , keep.lib.sizes=FALSE]
+DGElistFilt$counts %>% nrow()
+
+DGElistFiltNorm<- calcNormFactors(DGElistFilt)
+DGElistFiltNorm$samples
+```
+
+```{r}
+designTEST <- model.matrix(~0+group, data=DGElistFiltNorm$samples)
+designTEST
+
+TEST <- estimateDisp(DGElistFiltNorm, designTEST)
+fitTEST <- glmFit(TEST, designTEST)
+
+lrtTEST <- glmLRT(fitTEST, contrast=c(-1,1,0))
+filt1 <- (topTags(lrtTEST, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .1)
+
+lrtTEST2 <- glmLRT(fitTEST, contrast=c(-1,0,1))
+filt2 <- (topTags(lrtTEST2, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .1)
+
+lrtTEST3 <- glmLRT(fitTEST, contrast=c(0,1,-1))
+filt3 <- (topTags(lrtTEST3, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .1)
+
+union(filt1$Gene, filt2$Gene) %>% union(filt3$Gene) %>% length
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PRODUCES THE SAME RESULTS AS ABOVE. 
+```{r}
+# model.matrix(~cluster*Gender*Age*current_smoker, metadata) %>% colnames()
+
+design <- model.matrix(~group, data=DGElistFiltNorm$samples)
+
+colnames(design) <- c("(Intercept)", "Th2 High", "Th2 Low")
+
+DGElistFiltNormDisp <- estimateDisp(DGElistFiltNorm, design)
+plotBCV(DGElistFiltNormDisp)
+```
+
+```{r}
+fit <- glmFit(DGElistFiltNormDisp, design)
+lrtHigh_Con <- glmLRT(fit, coef = 2)
+lrtLow_Con <- glmLRT(fit, coef = 3)
+
+DEHigh_Con <- (topTags(lrtHigh_Con, n= Inf))$table
+DELow_Con <- (topTags(lrtLow_Con, n= Inf))$table
+
+DEHigh_ConFilt <- DEHigh_Con %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
+DELow_ConFilt <- DELow_Con %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
+
+DEHigh_ConFilt %>% nrow()
+DELow_ConFilt %>% nrow()
+
+intersect(DEHigh_ConFilt$Gene,DELow_ConFilt$Gene) %>% length()
+finalGeneList <- union(DEHigh_ConFilt$Gene,DELow_ConFilt$Gene)
+```
+
+```{r}
+DGElistFiltNorm2 <- DGElistFiltNorm
+DGElistFiltNorm2$samples$group <- relevel(DGElistFiltNorm$samples$group, ref="2")
+
+design2 <- model.matrix(~group, data=DGElistFiltNorm2$samples)
+
+DGElistFiltNorm2Disp <- estimateDisp(DGElistFiltNorm2, design2)
+
+fit2 <- glmFit(DGElistFiltNorm2Disp, design2)
+lrt2 <-  glmLRT(fit2, coef=3)
+
+
+DEHigh_Low <- (topTags(lrt2, n= Inf))$table
+
+DEHigh_LowFilt <- DEHigh_Low %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
+DEHigh_LowFilt %>% nrow()
+
+intersect(finalGeneList, DEHigh_LowFilt$Gene) %>% length()
+```
+
+
+
+
+
