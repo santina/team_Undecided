@@ -201,6 +201,8 @@ dir.create(newDirName)
 
 # network construction
 networks <- buildCorrelationNetworks(groups, genes, eData)
+saveRDS(networks, paste0(newDirName, "/networkMatrices_", runID_arg, ".rds"))
+
 diffCorrelations <- computeDiffCorrelations(networks)
 saveRDS(diffCorrelations, paste0(newDirName, "/diffCorrelations_", runID_arg, ".rds"))
 
