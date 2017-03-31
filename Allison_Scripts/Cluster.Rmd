@@ -11,6 +11,7 @@ output:
 # install.packages(WGCNA)
 
 ```{r, message=FALSE, warning=FALSE}
+source("https://bioconductor.org/biocLite.R")
 biocLite('biomaRt')
 library(tidyverse)
 library(magrittr)
@@ -59,13 +60,19 @@ gsg$allOK # All are good. If not, will be False and we would have to filter them
 
 # now work with our genes
 ttrun <- as.data.frame(t(trundata))
+ttrun <- log2(ttrun)
+
+# replace -inf with 0
+ttrun[ttrun == -Inf] <- 0
+# center and scale our gene expression
+ttrunSC <- data.frame(scale(ttrun))
 
 # separate asthmatics and control into two matrices using our added column
-matrixList <- split(ttrun, metadata$Status)
+matrixList <- split(ttrunSC, metadata$Status)
 matrixList2 <- split(tcount, metadata$Status)
 
 # now grab the patients and cluster
-asthma <- matrixList$Asthma
+asthma <- data.frame(matrixList$Asthma)
 
 geneCluster = kmeans(asthma,2,100,nstart=20);
 
@@ -78,7 +85,7 @@ sizeGrWindow(12,12)
 metadata$cluster <- 0
 for (i in 1:57) {
  x <- which(metadata$ID == rownames(asthma)[i])
-  metadata[x, 9] = asthma[i,4]
+  metadata[x, 9] = geneCluster$cluster[i]
 }
 write.csv(metadata, "metaCluster.csv")
 ```
@@ -88,9 +95,12 @@ Now let's draw some graphs and look at our clusters
 library(ggplot2)
 library(gridExtra)
 # let's make some plots
-png(filename="k_means.png")
 p1 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
 p2 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000133110, color = geneCluster$cluster)) + geom_point()
 p3 <- ggplot(asthma, aes(ENSG00000133110, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
 grid.arrange(p1, p2, p3, nrow = 3)
+
+# save
+g <- arrangeGrob(p1, p2, p3, nrow=3) #generates g
+ggsave(file="k_means.png", g) #saves g
 ```
