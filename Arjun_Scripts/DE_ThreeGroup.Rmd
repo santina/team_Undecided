@@ -45,6 +45,22 @@ DGElistFiltNorm<- calcNormFactors(DGElistFilt)
 DGElistFiltNorm$samples
 ```
 
+
+```{r}
+model.matrix(~cluster+Gender+Age+current_smoker, metadata)
+model.matrix(~cluster*Gender, metadata)
+
+
+```
+
+
+
+
+
+
+
+
+
 ```{r}
 designTEST <- model.matrix(~0+group, data=DGElistFiltNorm$samples)
 designTEST
@@ -53,13 +69,14 @@ TEST <- estimateDisp(DGElistFiltNorm, designTEST)
 fitTEST <- glmFit(TEST, designTEST)
 
 lrtTEST <- glmLRT(fitTEST, contrast=c(-1,1,0))
-filt1 <- (topTags(lrtTEST, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .1)
+filt1 <- (topTags(lrtTEST, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .001)
 
 lrtTEST2 <- glmLRT(fitTEST, contrast=c(-1,0,1))
-filt2 <- (topTags(lrtTEST2, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .1)
+filt2 <- (topTags(lrtTEST2, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
+filt2 %>% nrow()
 
 lrtTEST3 <- glmLRT(fitTEST, contrast=c(0,1,-1))
-filt3 <- (topTags(lrtTEST3, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .1)
+filt3 <- (topTags(lrtTEST3, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .001)
 
 union(filt1$Gene, filt2$Gene) %>% union(filt3$Gene) %>% length
 
@@ -73,7 +90,7 @@ union(filt1$Gene, filt2$Gene) %>% union(filt3$Gene) %>% length
 
 
 
-
+##### DONT LOOK AT THIS. 
 
 
 
