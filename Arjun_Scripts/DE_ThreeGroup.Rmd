@@ -85,6 +85,14 @@ filt3 <- (topTags(lrtTEST3, n= Inf))$table %>% rownames_to_column(var="Gene") %>
 
 heyya <- union(filt1$Gene, filt2$Gene) %>% union(filt3$Gene)
 heyya %>% length()
+
+emmaGenes <- read.table("~/Downloads/meth_CtlvsTh2high_pval0.01_ensemblID.txt", col.names = 2)
+
+emmaGenes2 <- read.table("~/Downloads/meth_CtlvsTh2low_pval0.01_ensemblID.txt", col.names = 2)
+
+emmaGenes %>% nrow()
+emmaGenes2 %>% nrow() 
+intersect(emmaGenes2$X2, emmaGenes$X2) %>% length()
 ```
 
 
