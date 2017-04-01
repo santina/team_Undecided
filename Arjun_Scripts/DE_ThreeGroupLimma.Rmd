@@ -1,0 +1,121 @@
+---
+title: "Differential Expression 3 Group Limma"
+author: "Arjun Baghela"
+date: "3/31/2017"
+output: html_document
+---
+
+
+```{r}
+library(limma)
+library(tidyverse)
+library(magrittr)
+library(edgeR)
+```
+
+```{r}
+countdata <- read.table(file= "Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
+metadata <- read.csv(file= "Allison_Scripts/metaCluster.csv", row.names = 1)
+
+metadata %<>% filter(ID %in% colnames(countdata))
+
+metadata %>% group_by(Status) %>% tally()
+
+metadata %<>% arrange(cluster)
+metadata %>% group_by(cluster) %>% tally()
+
+countdata <- countdata[,as.character(metadata$ID)]
+colnames(countdata) == metadata$ID
+
+metadata$cluster <- as.factor(metadata$cluster)
+str(metadata)
+
+remove <- c("ENSG00000016490", "ENSG00000197632", "ENSG00000133110")
+countdata <- countdata[!(rownames(countdata) %in% remove),]
+```
+
+
+```{r}
+DGElist <- DGEList(counts=countdata)
+
+DGElist$samples$lib.size %>% summary()
+DGElist$counts %>% nrow()
+
+keep <- rowSums(cpm(DGElist)>0.275) >= 28
+
+DGElistFilt <- DGElist[keep, , keep.lib.sizes=FALSE]
+#DGElistFilt <- DGElist
+DGElistFilt$counts %>% nrow()
+
+DGElistFiltNorm <- calcNormFactors(DGElistFilt)
+
+
+
+design <- model.matrix(~0+cluster, metadata)
+design
+```
+
+
+# LIMA TREND
+```{r}
+DGElistFiltCPM <- cpm(DGElistFilt, log=TRUE, prior.count=0.25)
+
+DGElistFiltCPMfit <- lmFit(DGElistFiltCPM, design)
+
+contrast.matrix <- makeContrasts(cluster1-cluster0, cluster2-cluster0, cluster1-cluster2, levels=design)
+
+fit2 <- contrasts.fit(DGElistFiltCPMfit, contrast.matrix)
+fit2 <- eBayes(fit2, trend=TRUE)
+
+
+first <- (topTable(fit2, coef=1, adjust="fdr", sort.by = "p", n= Inf) %>% rownames_to_column(var="Gene") %>% filter(adj.P.Val <= 0.025))$Gene
+
+second <- (topTable(fit2, coef=3, adjust="fdr", sort.by = "p", n= Inf) %>% rownames_to_column(var="Gene") %>% filter(adj.P.Val <= 0.025))$Gene
+
+third <- (topTable(fit2, coef=2, adjust="fdr", sort.by = "p", n= Inf) %>% rownames_to_column(var="Gene") %>% filter(adj.P.Val <= 0.5))$Gene
+
+first %>% length()
+second %>% length()
+third %>% length()
+
+union(third, second) %>% union(first) %>% length()
+
+```
+
+
+
+## What Santina did. 
+```{r}
+design <- model.matrix(~cluster, metadata)
+normfactor <- calcNormFactors(countdata)
+v <- voom(countdata, design, plot=TRUE, lib.size=colSums(countdata)*normfactor)
+#v <- voom(countdata, design, plot=TRUE)
+#v <- voom(countdata, design, plot=TRUE, normalize="quantile")
+
+fit <- lmFit(v, design)
+fit <- eBayes(fit)
+
+first <- (topTable(fit, coef=1, adjust="fdr", sort.by = "p", n= Inf) %>% rownames_to_column(var="Gene") %>% filter(adj.P.Val <= 1e-115))$Gene
+
+second <- (topTable(fit, coef=3, adjust="fdr", sort.by = "p", n= Inf) %>% rownames_to_column(var="Gene") %>% filter(adj.P.Val <= .25))$Gene
+
+third <- (topTable(fit, coef=2, adjust="fdr", sort.by = "p", n= Inf) %>% rownames_to_column(var="Gene") %>% filter(adj.P.Val <= .1))$Gene
+
+first %>% length()
+second %>% length()
+third %>% length()
+
+heydawg <- union(third, second) %>% union(first)
+
+
+intersect(heydawg,heyya)
+```
+
+
+
+### 
+
+```{r}
+v <- voom(countdata, )
+```
+

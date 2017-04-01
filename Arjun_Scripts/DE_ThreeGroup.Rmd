@@ -29,6 +29,9 @@ colnames(countdata) == metadata$ID
 
 metadata$cluster <- as.factor(metadata$cluster)
 str(metadata)
+
+remove <- c("ENSG00000016490", "ENSG00000197632", "ENSG00000133110")
+countdata <- countdata[!(rownames(countdata) %in% remove),]
 ```
 
 ```{r}
@@ -69,17 +72,19 @@ TEST <- estimateDisp(DGElistFiltNorm, designTEST)
 fitTEST <- glmFit(TEST, designTEST)
 
 lrtTEST <- glmLRT(fitTEST, contrast=c(-1,1,0))
-filt1 <- (topTags(lrtTEST, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .001)
+filt1 <- (topTags(lrtTEST, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .01)
 
 lrtTEST2 <- glmLRT(fitTEST, contrast=c(-1,0,1))
 filt2 <- (topTags(lrtTEST2, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
 filt2 %>% nrow()
 
 lrtTEST3 <- glmLRT(fitTEST, contrast=c(0,1,-1))
-filt3 <- (topTags(lrtTEST3, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .001)
+filt3 <- (topTags(lrtTEST3, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .01)
 
-union(filt1$Gene, filt2$Gene) %>% union(filt3$Gene) %>% length
 
+
+heyya <- union(filt1$Gene, filt2$Gene) %>% union(filt3$Gene)
+heyya %>% length()
 ```
 
 
