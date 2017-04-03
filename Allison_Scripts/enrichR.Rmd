@@ -13,25 +13,29 @@ conHigh <- readRDS("../processed_data/controlHighResults.rds")
 conLow <- readRDS("../processed_data/controlLowResults.rds")
 highLow <- readRDS("../processed_data/highLowResults.rds")
 
-chMatrix <- data.frame(do.call('rbind', strsplit(as.character(conHigh$gene_pair),'.',fixed=TRUE)))
-chMatrix$weight <- conHigh$abs_correlation_change
+chFilter <- conHigh[conHigh$fdr==0,]
+clFilter <- conLow[conLow$fdr==0,]
+hlFilter <- highLow[highLow$fdr==0,]
 
-clMatrix <- data.frame(do.call('rbind', strsplit(as.character(conLow$gene_pair),'.',fixed=TRUE)))
-clMatrix$weight <- conLow$abs_correlation_change
+chMatrix <- data.frame(do.call('rbind', strsplit(as.character(chFilter$gene_pair),'.',fixed=TRUE)))
+chMatrix$weight <- chFilter$abs_correlation_change
 
-hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(highLow$gene_pair),'.',fixed=TRUE)))
-hlMatrix$weight <- highLow$abs_correlation_change
+clMatrix <- data.frame(do.call('rbind', strsplit(as.character(clFilter$gene_pair),'.',fixed=TRUE)))
+clMatrix$weight <- clFilter$abs_correlation_change
+
+hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(hlFilter$gene_pair),'.',fixed=TRUE)))
+hlMatrix$weight <- hlFilter$abs_correlation_change
 
 write.table(chMatrix, file = "chWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
 write.table(clMatrix, file = "clWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
 write.table(hlMatrix, file = "hlWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
 
 
-chFilter <- conHigh[conHigh$fdr<=0.05,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+chFilter <- conHigh[conHigh$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 
-clFilter <- conLow[conLow$fdr<=0.05,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+clFilter <- conLow[conLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 
-hlFilter <- highLow[highLow$fdr<=0.05,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+hlFilter <- highLow[highLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 ``` 
 
 Let's convert your Ensembl IDs into actual gene names
