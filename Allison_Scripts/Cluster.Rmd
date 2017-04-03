@@ -15,8 +15,7 @@ source("https://bioconductor.org/biocLite.R")
 biocLite('biomaRt')
 library(tidyverse)
 library(magrittr)
-library(edgeR)
-library(WGCNA)
+library(scatterplot3d)
 library(biomaRt)
 options(stringsAsFactors = FALSE)
 ```
@@ -69,16 +68,14 @@ ttrunSC <- data.frame(scale(ttrun))
 
 # separate asthmatics and control into two matrices using our added column
 matrixList <- split(ttrunSC, metadata$Status)
-matrixList2 <- split(tcount, metadata$Status)
 
 # now grab the patients and cluster
 asthma <- data.frame(matrixList$Asthma)
+control <- data.frame(matrixList$Control)
 
 geneCluster = kmeans(asthma,2,100,nstart=20);
 
 geneCluster$cluster <- as.factor(geneCluster$cluster)
-# Plot the sample tree: Open a graphic output window of size 12 by 9 inches
-# The user should change the dimensions if the window is too large or too small.
 sizeGrWindow(12,12)
 
 # add clusters to metadata
@@ -88,12 +85,21 @@ for (i in 1:57) {
   metadata[x, 9] = geneCluster$cluster[i]
 }
 write.csv(metadata, "metaCluster.csv")
+
+# save everything!
+write.table(asthma, file = "asthma.tsv")
+write.table(control, file = "control.tsv")
 ```
 
 Now let's draw some graphs and look at our clusters
 ```{r, eval=FALSE, include=FALSE}
 library(ggplot2)
 library(gridExtra)
+# we're not going to re-generate our k-means clusters anymore, so run starting from here:
+metadata <- read.csv('metaCluster.csv', row.names = 1)
+asthma <- read.table('asthma.tsv')
+control <- read.table('control.tsv')
+
 # let's make some plots
 p1 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
 p2 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000133110, color = geneCluster$cluster)) + geom_point()
@@ -103,4 +109,47 @@ grid.arrange(p1, p2, p3, nrow = 3)
 # save
 g <- arrangeGrob(p1, p2, p3, nrow=3) #generates g
 ggsave(file="k_means.png", g) #saves g
+```
+
+Now let's look at our clusters with a 3D scatterplot.
+```{r, eval=FALSE, include=FALSE}
+attach(asthma)
+scatterplot3d(ENSG00000016490, ENSG00000197632, ENSG00000133110, color = geneCluster$cluster)
+```
+
+Now let's re-cluster with our controls and look at the scatterplots.
+```{r, eval=FALSE, include=FALSE}
+fused <- rbind(asthma, control)
+gcFused = kmeans(fused,3,100,nstart=20);
+
+#attach(fused)
+#scatterplot3d(ENSG00000016490, ENSG00000197632, ENSG00000133110, color = gcFused$cluster)
+
+q1 <- ggplot(fused, aes(ENSG00000016490, ENSG00000197632, color = gcFused$cluster)) + geom_point()
+q2 <- ggplot(fused, aes(ENSG00000016490, ENSG00000133110, color = gcFused$cluster)) + geom_point()
+q3 <- ggplot(fused, aes(ENSG00000133110, ENSG00000197632, color = gcFused$cluster)) + geom_point()
+grid.arrange(q1, q2, q3, nrow = 3)
+
+# create a new metadata, just so we can look at it
+mdTrial <- metadata
+for (i in 1:85) {
+ x <- which(mdTrial$ID == rownames(fused)[i])
+  mdTrial[x, 9] = gcFused$cluster[i]
+}
+
+```
+
+Looks like 2 is lowest, 3 is medium, and 1 is high.
+
+Extract the pathways associated with CLCA1, periostin, and serpinB2
+
+```{r}
+#library('sigora')
+# 5055 is serpinB2
+# 1179 is CLCA1
+# 10631 is periostin
+#pathways <- ora(c(1179), kegH)
+
+sigList <- readRDS('fdajfd.txt')
+
 ```
