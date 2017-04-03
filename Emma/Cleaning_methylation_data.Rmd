@@ -1,0 +1,317 @@
+---
+title: "Exploration of Methylation data"
+author: "Emma Graham"
+date: "March 25, 2017"
+output: github_document
+---
+
+Methylation data
+- BEFORE THIS
+	- lowly detected probes, probes that mapped to more than one site and probes that overlapped with known SNPs were discarded
+	- Used SWAN algorithm in Minfi package to correct Type I and Type II probe bias
+	- effects of Chip were regressed out using COMBAT
+	- gender, ethnicity and age were used as covariates in differential expression (BMI was not included)
+	
+- NOW
+	- graph distribution of Beta values, check if bimodal
+	- check association of each PC with confounders
+	- remove non-variable CpGs, as defined by Edgar et al (2017)
+
+RNAseq
+- BY AUTHORS:
+	- aligned to human genome using BWA
+	- protein coding genes isolated using BedTools
+	- counts adjusted for gene length and read depth
+	- filtered to genes that had at least 5 reads in 2 individuals, and that were annotated in Biomart
+	- RUVseq was used to find hidden sources of variation (using spike-ins). One RUV was correlated with RIN and another one with ethnicity, average base pair read length and flow cell
+	- Two RUVs were regressed out, PCs were not correlated with additional variables
+
+- NOW:
+	- check that PCs do not correlate with known coundounders
+	- can't do HCP, because we don't have raw counts
+
+```{r}
+library(tidyverse)
+library(limma)
+library(gplots)
+library(RColorBrewer)
+setwd("~/Desktop/Masters/STAT540/TeamUndecided")
+rna_data <- read.table(file = "Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", 
+											 header = TRUE,
+											 row.names = 1, 
+											 check.names = FALSE)
+dim(rna_data)
+
+meth_data <- c()
+methylation_files <- list.files("Raw_Data/Methylation_Data", full.names = TRUE)
+for (entry in 1:11){
+	data <- read.table(file = methylation_files[entry], 
+										 header = TRUE, 
+										 check.names = FALSE, 
+										 row.names = 1)
+	meth_data <- rbind(meth_data, data)
+}
+
+stuff <- rownames(meth_data)
+#check to see that no row was imported twice. 
+stuffunique <- length(unique(stuff))
+
+
+dim(meth_data)
+meta_data <- read.table("Allison_Scripts/metaCluster.csv", header = TRUE, row.names = 1, sep = ",")[,-c(8)]
+dim(meta_data)
+
+#reduce all data so that we have the same samples in both RNAseq and methylation data tables
+
+keep_samples <- colnames(rna_data)
+
+overlap_rna_meth <- intersect(colnames(meth_data), keep_samples)
+#81 samples overlap
+
+common_meth <- meth_data[, c(overlap_rna_meth)]
+common_rna <- rna_data[, c(overlap_rna_meth)]
+
+meta_data <- meta_data %>% filter(ID %in% overlap_rna_meth)
+
+meta_data <- data.frame(meta_data, row.names = 1)
+meta_data$current_smoker <- droplevels(meta_data$current_smoker)
+meta_data$Smoke_Ever <- droplevels(meta_data$current_smoker)
+meta_data <- meta_data[sort(rownames(meta_data)),]
+meta_data$cluster <- as.factor(meta_data$cluster)
+meta_data$cluster <- relevel(meta_data$cluster, ref = "0")
+
+common_rna <- common_rna[, sort(rownames(meta_data))]
+common_meth <- common_meth[, sort(rownames(meta_data))]
+
+all(colnames(common_rna) == colnames(common_meth))
+all(colnames(common_rna) == rownames(meta_data))
+
+```
+
+## Confirming that PCs don't correlate with any confounders 
+
+```{r}
+#take out samples that have missing data
+pruned_meta_data <- meta_data[complete.cases(meta_data),]
+pruned_rna_data <- common_rna[, rownames(pruned_meta_data)]
+pcs_rna <- t(prcomp(log2(2+t(pruned_rna_data)), center = TRUE, scale = TRUE)[["x"]])
+
+design_matrix <- model.matrix(~ 0 + Gender + Age + Ethnicity + current_smoker + Smoke_Ever, pruned_meta_data)
+
+full_fit <- lmFit(pcs_rna, design_matrix)
+full_EbFit <- eBayes(full_fit)
+colnames(full_EbFit)
+
+big_table <- matrix(ncol = 81)
+for (entry in 1:length(colnames(full_EbFit))){
+	pval <- toptable(full_EbFit, coef = entry, number = Inf, sort.by = "none")$adj.P.Val
+	big_table <- rbind(big_table, pval)
+}
+
+big_table <- big_table[-c(1),]
+row_pc_names <- rownames(toptable(full_EbFit, coef = entry, number = Inf, sort.by = "none"))
+colnames(big_table) <- row_pc_names
+rownames(big_table) <- c("Gender: Female", "Gender: Male", "Age", "East Asian", "Other Ethnicity", "Non-current smoker", "Never Smoked" )
+cols<-c(rev(brewer.pal(9,"YlOrRd")), "#FFFFFF")
+heatmap.2(big_table,  Rowv = NA, Colv = NA, scale = NULL , trace="none",  dendrogram = "none",
+          col=cols[c(1, 6, 8)], cexCol=0.5, cexRow=1 , margins= c (8,8), srtCol=90 , symm = FALSE,
+					breaks = c(0, 0.01, 0.05, 1),
+          main = "Adjusted p-value of association \nbetween \npatient characteristic and PC" )
+```
+
+Couldn't do current_smokerY and Smoke_everY due to small sample size
+
+This seems to be directly in contrast with their results. Do we adjust for this additional correlation?
+
+## Cleaning methylation data
+
+```{r}
+library(RCurl)
+x <- getURL("https://raw.githubusercontent.com/redgar598/Tissue_Invariable_450K_CpGs/master/Invariant_Buccal_CpGs.csv")
+y <- read.csv(text = x)
+nonvariable_buccal<-as.character(y$CpG)
+
+x <- getURL("https://raw.githubusercontent.com/redgar598/Tissue_Invariable_450K_CpGs/master/Invariant_Blood_CpGs.csv")
+y <- read.csv(text = x)
+nonvariable_blood<-as.character(y$CpG)
+
+x <- getURL("https://raw.githubusercontent.com/redgar598/Tissue_Invariable_450K_CpGs/master/Invariant_Placenta_CpGs.csv")
+y <- read.csv(text = x)
+nonvariable_placenta<-as.character(y$CpG)
+
+combined_list_cpgs <- unique(c(nonvariable_blood, nonvariable_buccal, nonvariable_placenta))
+length(combined_list_cpgs)
+```
+
+Now let's check to see if they are variable. 
+
+```{r}
+common_meth_trial <- common_meth
+
+filtered_combined_list <- combined_list_cpgs[combined_list_cpgs %in% rownames(common_meth_trial)]
+
+print(dim(common_meth_trial))
+good_list <- c()
+
+for (entry in filtered_combined_list){
+	x <- as.vector(common_meth_trial[entry,])
+	y <- range(x)
+	eval <- abs(y[2] - y[1]) >= 0.05
+	if (eval==TRUE){
+		good_list <- c(good_list, entry)
+	} else {
+		0
+	}
+}
+
+length(good_list)
+```
+Let's remove these probes
+```{r}
+keep <- setdiff(rownames(common_meth), good_list)
+length(keep)
+common_meth <- common_meth[keep,]
+
+```
+
+#Assessment of differentially methylated sites
+
+```{r}
+source("https://bioconductor.org/biocLite.R")
+biocLite("lumi")
+
+design_matrix <- model.matrix(~ 0 + cluster + Gender + Age + Ethnicity + current_smoker, pruned_meta_data)
+
+library(lumi)
+library(limma)
+
+common_meth_M <- beta2m(common_meth)
+all(colnames(common_meth_M) == rownames(design_matrix))
+
+
+#fit = lmFit(v, design)
+#cm = makeContrasts(
+#    onepatient=patientA010-patientA004,
+#    levels=design)
+# fit = contrasts.fit(fit, cm)
+# fit = eBayes(fit)
+# b = rownames(topTable(fit, n=Inf, p.value=0.05))
+
+fit <- lmFit(common_meth_M, design_matrix)
+cm = makeContrasts(
+    CtlvsTh2low=cluster2 - cluster0,
+    CtlvsTh2high=cluster1 - cluster0,
+    Th2highvsTh2low = cluster1 - cluster2,
+    levels=design_matrix)
+fit <- contrasts.fit(fit, cm)
+EbFit <- eBayes(fit)
+sigCtlvsTh2low <- toptable(EbFit, coef = "CtlvsTh2low", n = Inf)
+sigCtlvsTh2high <- toptable(EbFit, coef = "CtlvsTh2high", n = Inf)
+sigth2highvslow <- toptable(EbFit, coef = "Th2highvsTh2low",n = Inf)
+```
+
+#Figuring out what methylation probe to take
+
+```{r}
+source("https://bioconductor.org/biocLite.R")
+biocLite("IlluminaHumanMethylation450kanno.ilmn12.hg19")
+library(IlluminaHumanMethylation450kanno.ilmn12.hg19)
+```
+
+```{r}
+anno = getAnnotation(IlluminaHumanMethylation450kanno.ilmn12.hg19)
+our_annotations <- anno[,c("Name", "UCSC_RefGene_Name", "UCSC_RefGene_Accession", "UCSC_RefGene_Group")]
+annotation_row_names <- write.table(rownames(our_annotations), file = "./Intermediate/methprobes_ENSG_ID.txt", sep = "\n", quote = FALSE, row.names = FALSE)
+
+source("http://bioconductor.org/biocLite.R")
+biocLite("biomaRt")
+biocLite("IlluminaHumanMethylation450k.db")
+library(IlluminaHumanMethylation450k.db)
+library(biomaRt)
+
+human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+toy_probes <- rownames(sigCtlvsTh2low)
+getProbeEnsemblNames <- function(data_frame){
+	CpG <- rownames(data_frame)
+	new_data_frame <- cbind(data_frame, illumina_humanmethylation450 = CpG)
+	info <- getBM( attributes=c("illumina_humanmethylation450", "ensembl_gene_id") , filters= "illumina_humanmethylation450", values = CpG ,mart = human)
+	final_data <- inner_join(new_data_frame, info)
+}
+
+
+probesToEntrez <- IlluminaHumanMethylation450kENTREZID
+i <- 1
+num <- 279728
+big_annotated_sigCtlvsTh2low <- c()
+for ( entry in 1:(num/10000)){
+	if (i + 10000 <= num){
+		annotated_sigCtlvsTh2low <- getProbeEnsemblNames(sigCtlvsTh2low[i:(i + 10000),])
+		i <- i + 10000
+		print("I'm here")
+	} else{
+		annotated_sigCtlvsTh2low <- getProbeEnsemblNames(sigCtlvsTh2low[i:num,])
+		i <- i + (num -i)
+		print("This is the end")
+	}
+	big_annotated_sigCtlvsTh2low <- rbind(big_annotated_sigCtlvsTh2low, annotated_sigCtlvsTh2low)
+	print("This is the very end of thefunction")
+}
+
+i <- 1
+num <- 279728
+big_annotated_sigCtlvsTh2high <- c()
+for ( entry in 1:(num/10000)){
+	if (i + 10000 <= num){
+		annotated_sigCtlvsTh2high <- getProbeEnsemblNames(sigCtlvsTh2high[i:(i + 10000),])
+		i <- i + 10000
+	} else{
+		annotated_sigCtlvsTh2high <- getProbeEnsemblNames(sigCtlvsTh2high[i:num,])
+		i <- i + (num -i)
+	}
+	big_annotated_sigCtlvsTh2high <- rbind(big_annotated_sigCtlvsTh2high, annotated_sigCtlvsTh2high)
+}
+
+
+i <- 1
+num <- 279728
+big_annotated_sigth2highvslow <- c()
+for ( entry in 1:(num/10000)){
+	if (i + 10000 <= num){
+		annotated_sigth2highvslow <- getProbeEnsemblNames(sigth2highvslow[i:(i + 10000),])
+		i <- i + 10000
+	} else{
+		annotated_sigth2highvslow <- getProbeEnsemblNames(sigth2highvslow[i:num,])
+		i <- i + (num -i)
+	}
+	big_annotated_sigth2highvslow <- rbind(big_annotated_sigth2highvslow, annotated_sigth2highvslow)
+}
+
+#take the median methylation value
+
+overlapping_probes <- intersect(unique(big_annotated_sigCtlvsTh2high$ensembl_gene_id), intersect(unique(big_annotated_sigCtlvsTh2low$ensembl_gene_id), unique(big_annotated_sigth2highvslow$ensembl_gene_id)))
+
+FilterListandDefineWeight <- function(results){
+	filtered <- results %>% dplyr::filter(ensembl_gene_id %in% overlapping_probes)
+	intermediate <- filtered %>% dplyr::group_by(ensembl_gene_id) %>% dplyr::mutate(MinPval = min(adj.P.Val))
+	weighted <- intermediate %>% dplyr::mutate(weight = -log2(MinPval))
+	final <- weighted[,c(7,9)]
+	final[!duplicated(final),]
+}
+
+Th2highvscontrolRESULTS <- FilterListandDefineWeight(big_annotated_sigCtlvsTh2high)
+
+Th2lowvscontrolRESULTS <- FilterListandDefineWeight(big_annotated_sigCtlvsTh2low)
+
+Th2lowvshighRESULTS <- FilterListandDefineWeight(big_annotated_sigth2highvslow)
+
+
+write.table(Th2highvscontrolRESULTS, file = "Intermediate/meth_CtlvsTh2high_ensemblID_weights.txt", row.names = FALSE, quote = FALSE, sep = ",", col.names = TRUE)
+
+write.table(Th2lowvscontrolRESULTS, file = "Intermediate/meth_CtlvsTh2low_ensemblID_weights.txt", row.names = FALSE, quote = FALSE, sep = ",", col.names = TRUE)
+
+write.table(Th2lowvshighRESULTS, file = "Intermediate/meth_Th2highvsTh2low_ensemblID_weights.txt", row.names = FALSE, quote = FALSE, sep = ",", col.names = TRUE)
+
+
+
+```
+
