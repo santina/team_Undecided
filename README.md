@@ -8,6 +8,4 @@ Below are links to our proposal & progress report.
 
 # TITLE
 
-
-
 ![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/teamUndecided_Pipeline.jpg "Pipeline")
