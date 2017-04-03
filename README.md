@@ -9,4 +9,5 @@ Below are links to our proposal & progress report.
 # TITLE
 
 
-![pipeline](https://upload.wikimedia.org/wikipedia/en/0/09/Community_title.jpg "Community")
+
+![pipeline](team_Undecided/teamUndecided_Pipeline.jpg "Pipeline")
