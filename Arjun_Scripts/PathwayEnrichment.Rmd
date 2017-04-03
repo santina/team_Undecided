@@ -1,0 +1,23 @@
+---
+title: "Pathway Enrichment"
+author: "Arjun Baghela"
+date: "4/3/2017"
+output: html_document
+---
+
+
+```{r}
+
+conHigh <- readRDS("~/Desktop/team_Undecided/processed_data/controlHighResults.rds")
+conLow <- readRDS("~/Desktop/team_Undecided/processed_data/controlLowResults.rds")
+highLow <- readRDS("~/Desktop/team_Undecided/processed_data/highLowResults.rds")
+
+conHigh[conHigh$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique() %>% length()
+
+conLow[conLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique() %>% length()
+
+highLow[highLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique() %>% length()
+
+
+```
+
