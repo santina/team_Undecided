@@ -149,7 +149,4 @@ Extract the pathways associated with CLCA1, periostin, and serpinB2
 # 1179 is CLCA1
 # 10631 is periostin
 #pathways <- ora(c(1179), kegH)
-
-sigList <- readRDS('fdajfd.txt')
-
 ```
