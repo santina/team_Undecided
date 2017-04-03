@@ -7,3 +7,6 @@ Below are links to our proposal & progress report.
 * [Progress Report](https://github.com/STAT540-UBC/team_Undecided/blob/master/progress_report.md)
 
 # TITLE
+
+
+![pipeline](https://upload.wikimedia.org/wikipedia/en/0/09/Community_title.jpg "Community")
