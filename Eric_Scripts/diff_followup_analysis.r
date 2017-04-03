@@ -209,14 +209,17 @@ plotPValueDistribution("control.th2high")
 plotPValueDistribution("control.th2low")
 plotPValueDistribution("th2high.th2low")
 
-# controlHighResults <- getDiffCorResults("control.th2high")
+controlHighResults <- readRDS("processed_data/controlHighResults.rds")
+sigControlHighResults <-controlHighResults %>% filter(fdr <= 0)
+sigControlHighResults$gene_pair %>% filterGenePairs("control.th2high", 10) %>% nrow()
+
 # saveRDS(controlHighResults, "processed_data/controlHighResults.rds")
 # 
-# controlLowResults <- getDiffCorResults("control.th2low")
-# saveRDS(controlHighResults, "processed_data/controlLowResults.rds")
+controlLowResults <- getDiffCorResults("control.th2low")
+saveRDS(controlLowResults, "processed_data/controlLowResults.rds")
 # 
-# highLowResults <- getDiffCorResults("th2high.th2low")
-# saveRDS(controlHighResults, "processed_data/highLowResults.rds")
+highLowResults <- getDiffCorResults("th2high.th2low")
+saveRDS(highLowResults, "processed_data/highLowResults.rds")
 
 filteredGenePairs <- filterGenePairs(controlHighResults$gene_pair, "control.th2high", 10)
 
