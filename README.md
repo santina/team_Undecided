@@ -10,4 +10,4 @@ Below are links to our proposal & progress report.
 
 
 
-![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/teamUndecided_Pipeline.jpg =100x20)
+![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/teamUndecided_Pipeline.jpg "Pipeline"){ width: 200px; }
