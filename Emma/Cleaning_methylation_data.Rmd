@@ -5,43 +5,59 @@ date: "March 25, 2017"
 output: github_document
 ---
 
-Methylation data
-- BEFORE THIS
-	- lowly detected probes, probes that mapped to more than one site and probes that overlapped with known SNPs were discarded
-	- Used SWAN algorithm in Minfi package to correct Type I and Type II probe bias
-	- effects of Chip were regressed out using COMBAT
-	- gender, ethnicity and age were used as covariates in differential expression (BMI was not included)
-	
-- NOW
-	- graph distribution of Beta values, check if bimodal
-	- check association of each PC with confounders
-	- remove non-variable CpGs, as defined by Edgar et al (2017)
+In this document, I will clean the normalized read counts and Illumina 450k methylation array data provided by Nicodemus-Johnson et al (2016). 
 
-RNAseq
-- BY AUTHORS:
-	- aligned to human genome using BWA
-	- protein coding genes isolated using BedTools
-	- counts adjusted for gene length and read depth
+Below, I will go through the data cleaning steps the authors performed, as well as the quality control steps that I will perform. 
+
+**Illumina 450k Array Methylation data**
+- AUTHORS PERFORMED:
+	- discarded lowly detected probes, probes that mapped to more than one site and probes that overlapped with known SNPs
+	- SWAN algorithm in Minfi package to correct Type I and Type II probe bias
+	- regressed out effects of Chip using COMBAT
+	- included gender, ethnicity and age as covariates in differential expression (BMI was not included)
+	
+- WILL PERFORM:
+	- check distribution of Beta values to see if bimodal
+	- check association of each PC with confounders
+	- remove non-variable CpGs, through procedure defined by Edgar et al (2017)
+
+**Illumina Hi-Seq 2000 data**
+- AUTHORS PERFORMED:
+	- aligned reads to human genome using BWA
+	- isolated protein coding genes using BedTools
+	- adjusted counts for gene length and read depth (unclear how this was done)
 	- filtered to genes that had at least 5 reads in 2 individuals, and that were annotated in Biomart
 	- RUVseq was used to find hidden sources of variation (using spike-ins). One RUV was correlated with RIN and another one with ethnicity, average base pair read length and flow cell
 	- Two RUVs were regressed out, PCs were not correlated with additional variables
 
-- NOW:
-	- check that PCs do not correlate with known coundounders
-	- can't do HCP, because we don't have raw counts
+- WILL PERFORM:
+	- check that PCs are not significantly correlated with known coundounders
 
-```{r}
+--
+
+Set global settings so all warning messages are suppressed. 
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+Load all necessary packages and data. 
+
+```{r, }
 library(tidyverse)
 library(limma)
 library(gplots)
 library(RColorBrewer)
-setwd("~/Desktop/Masters/STAT540/TeamUndecided")
+setwd("~/Desktop/Masters/STAT540/Team_Undecided")
 rna_data <- read.table(file = "Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", 
 											 header = TRUE,
 											 row.names = 1, 
 											 check.names = FALSE)
+
+#RNA data has 16535 rows and 85 columns. 
 dim(rna_data)
 
+#next we will load the methylation data. It is really big so I saved it in 11 smaller files (github won't allow me to push anything larger than 50MB)
 meth_data <- c()
 methylation_files <- list.files("Raw_Data/Methylation_Data", full.names = TRUE)
 for (entry in 1:11){
@@ -53,9 +69,10 @@ for (entry in 1:11){
 }
 
 stuff <- rownames(meth_data)
+length(stuff)
 #check to see that no row was imported twice. 
 stuffunique <- length(unique(stuff))
-
+#there seem to be the same number of rows in the unique names vector than in the rownames vector. Therefore there are no repeats!
 
 dim(meth_data)
 meta_data <- read.table("Allison_Scripts/metaCluster.csv", header = TRUE, row.names = 1, sep = ",")[,-c(8)]
