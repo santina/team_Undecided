@@ -13,14 +13,54 @@ conHigh <- readRDS("../processed_data/controlHighResults.rds")
 conLow <- readRDS("../processed_data/controlLowResults.rds")
 highLow <- readRDS("../processed_data/highLowResults.rds")
 
-chFilter <- conHigh[conHigh$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+chMatrix <- data.frame(do.call('rbind', strsplit(as.character(conHigh$gene_pair),'.',fixed=TRUE)))
+chMatrix$weight <- conHigh$abs_correlation_change
 
-clFilter <- conLow[conLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+clMatrix <- data.frame(do.call('rbind', strsplit(as.character(conLow$gene_pair),'.',fixed=TRUE)))
+clMatrix$weight <- conLow$abs_correlation_change
 
-hlFilter <- highLow[highLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(highLow$gene_pair),'.',fixed=TRUE)))
+hlMatrix$weight <- highLow$abs_correlation_change
+
+write.table(chMatrix, file = "chWeight.tsv")
+write.table(clMatrix, file = "clWeight.tsv")
+write.table(hlMatrix, file = "hlWeight.tsv")
+
+
+chFilter <- conHigh[conHigh$fdr<=0.05,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+
+clFilter <- conLow[conLow$fdr<=0.05,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+
+hlFilter <- highLow[highLow$fdr<=0.05,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 ``` 
+
+Let's convert your Ensembl IDs into actual gene names
+```{r}
+library('biomaRt')
+mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
+# time to grab the gene names to find our three genes
+chFilter <- unlist(getBM(filters= "ensembl_gene_id", attributes= c(
+"entrezgene"),values=chFilter,mart= mart), use.names = FALSE)
+clFilter <- unlist(getBM(filters= "ensembl_gene_id", attributes= c(
+"entrezgene"),values=clFilter,mart= mart), use.names = FALSE)
+hlFilter <- unlist(getBM(filters= "ensembl_gene_id", attributes= c(
+"entrezgene"),values=hlFilter,mart= mart), use.names = FALSE)
+```
 
 Now we'll get started with pathway enrichment using enrichR.
 ```{r}
+library(enrichR)
+dbs <- c("KEGG_2016", "GO_Biological_Process_2015", "GO_Cellular_Component_2015", "GO_Molecular_Function_2015")
 
+chEnriched <- enrichr(chFilter, dbs)
+clEnriched <- enrichr(clFilter, dbs)
+hlEnriched <- enrichr(hlFilter, dbs)
+
+chKEGG <- chEnriched$KEGG_2016
+clKEGG <- clEnriched$KEGG_2016
+hlKEGG <- hlEnriched$KEGG_2016
+
+chGOBP <- chEnriched$GO_Biological_Process_2015
+clGOBP <- clEnriched$GO_Biological_Process_2015
+hlGOBP <- hlEnriched$GO_Biological_Process_2015
 ```
