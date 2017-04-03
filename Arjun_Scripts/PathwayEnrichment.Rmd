@@ -5,6 +5,10 @@ date: "4/3/2017"
 output: html_document
 ---
 
+```{r}
+library(tidyverse)
+```
+
 
 ```{r}
 
