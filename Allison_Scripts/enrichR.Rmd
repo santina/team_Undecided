@@ -22,9 +22,9 @@ clMatrix$weight <- conLow$abs_correlation_change
 hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(highLow$gene_pair),'.',fixed=TRUE)))
 hlMatrix$weight <- highLow$abs_correlation_change
 
-write.table(chMatrix, file = "chWeight.tsv")
-write.table(clMatrix, file = "clWeight.tsv")
-write.table(hlMatrix, file = "hlWeight.tsv")
+write.table(chMatrix, file = "chWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
+write.table(clMatrix, file = "clWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
+write.table(hlMatrix, file = "hlWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
 
 
 chFilter <- conHigh[conHigh$fdr<=0.05,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
