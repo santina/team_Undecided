@@ -1,0 +1,36 @@
+---
+title: "Pathway Enrichment"
+author: "Arjun Baghela"
+date: "4/3/2017"
+output: html_document
+---
+
+First, we load our data, the gene list pairs from the control/Th2-high network, control/Th2-low network, and Th2-high/Th2network (all from the DiNA step).
+```{r}
+library(tidyverse)
+
+conHigh <- readRDS("../processed_data/controlHighResults.rds")
+conLow <- readRDS("../processed_data/controlLowResults.rds")
+highLow <- readRDS("../processed_data/highLowResults.rds")
+
+chFilter <- conHigh[conHigh$fdr==0,]
+clFilter <- conLow[conLow$fdr==0,]
+hlFilter <- highLow[highLow$fdr==0,]
+
+chMatrix <- data.frame(do.call('rbind', strsplit(as.character(chFilter$gene_pair),'.',fixed=TRUE)))
+chMatrix$weight <- chFilter$abs_correlation_change
+chMatrix <- (chMatrix[order(-chMatrix$weight),])[1:500,]
+
+clMatrix <- data.frame(do.call('rbind', strsplit(as.character(clFilter$gene_pair),'.',fixed=TRUE)))
+clMatrix$weight <- clFilter$abs_correlation_change
+clMatrix <- (clMatrix[order(-clMatrix$weight),])[1:500,]
+
+hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(hlFilter$gene_pair),'.',fixed=TRUE)))
+hlMatrix$weight <- hlFilter$abs_correlation_change
+hlMatrix <- (hlMatrix[order(-hlMatrix$weight),])[1:500,]
+
+write.table(chMatrix, file = "chWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
+write.table(clMatrix, file = "clWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
+write.table(hlMatrix, file = "hlWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
+```
+
