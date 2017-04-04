@@ -1,11 +1,8 @@
-# team_Undecided
+# Documents
 
-This repository contains all relevant scripts/data for our STAT540 project. 
+This folders contains all the finished, standalone documentation of our project, including our proposal, our progress report, and our poster. 
 
-Below are links to our proposal & progress report. 
-* [Proposal](https://github.com/STAT540-UBC/team_Undecided/blob/master/project_proposal.md)
-* [Progress Report](https://github.com/STAT540-UBC/team_Undecided/blob/master/progress_report.md)
-
-# TITLE
-
-![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/teamUndecided_Pipeline.jpg "Pipeline")
+Below are links.
+* [Proposal](https://github.com/STAT540-UBC/team_Undecided/blob/master/docs/proposal.md)
+* [Progress Report](https://github.com/STAT540-UBC/team_Undecided/blob/master/docs/progress_report.md)
+* [Poster](https://github.com/STAT540-UBC/team_Undecided/blob/master/docs/poster.pdf)
