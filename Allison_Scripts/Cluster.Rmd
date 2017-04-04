@@ -133,17 +133,18 @@ ggsave(file="k_means.png", g) #saves g
 
 Now let's look at our clusters with a 3D scatterplot.
 ```{r, eval=FALSE, include=FALSE}
-png("3d.png", width = 7, height = 5, units = 'in', res = 300)
+png("3d.png", width = 7, height = 7, units = 'in', res = 300)
 attach(asthma)
 # define colours for the clusters
 geneCluster$color[geneCluster$cluster == "Th2-high"] <- "#34675C"
 geneCluster$color[geneCluster$cluster == "Th2-low"] <- "#7DA3A1"
 # plot
-scatterplot3d(CLCA1, SerpinB2, Periostin, color = geneCluster$color, pch=19, grid=TRUE)
+scatterplot3d(CLCA1, SerpinB2, Periostin, color = geneCluster$color, pch=19, ylab = "")
 legend("topleft", inset=.05,      # location and inset
     bty="n", cex=.7,              # suppress legend box, shrink text 50%
     title="Cluster",
     c("Th2-high", "Th2-low"), fill=c("#34675C", "#7DA3A1"))
+text(x = 5, y = -1.8, "SerpinB2", srt = 45)
 detach(asthma)
 # save plot
 dev.off()
