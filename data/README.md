@@ -1,11 +1,3 @@
-# team_Undecided
+# Data
 
-This repository contains all relevant scripts/data for our STAT540 project. 
-
-Below are links to our proposal & progress report. 
-* [Proposal](https://github.com/STAT540-UBC/team_Undecided/blob/master/project_proposal.md)
-* [Progress Report](https://github.com/STAT540-UBC/team_Undecided/blob/master/progress_report.md)
-
-# TITLE
-
-![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/teamUndecided_Pipeline.jpg "Pipeline")
+This folder contains all our data that appear as inputs and outputs to our scripts.  The raw_data folder contains the methylation and RNA-seq data that was the intial input into our pipeline, downloaded from [GEO](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE85568), prior to any processing done by us.  The processed_data folder, on the other hand, contains any data that was created as an output from any one of our scripts (and often used as inputs to another part of the pipeline).
