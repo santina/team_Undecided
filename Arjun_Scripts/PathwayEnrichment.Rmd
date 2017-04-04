@@ -7,6 +7,7 @@ output: html_document
 
 ```{r}
 library(tidyverse)
+library(sigora)
 ```
 
 
@@ -16,12 +17,25 @@ conHigh <- readRDS("~/Desktop/team_Undecided/processed_data/controlHighResults.r
 conLow <- readRDS("~/Desktop/team_Undecided/processed_data/controlLowResults.rds")
 highLow <- readRDS("~/Desktop/team_Undecided/processed_data/highLowResults.rds")
 
-conHigh[conHigh$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique() %>% length()
+#conHigh <- conHigh[conHigh$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 
-conLow[conLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique() %>% length()
+#conLow <- conLow[conLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 
-highLow[highLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique() %>% length()
+#highLow <- highLow[highLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+
+conHigh %>% filter(fdr == 0) %>% ggplot(aes(x= abs_correlation_change)) + geom_histogram(binwidth= .5)
+
+conLow %>% filter(fdr == 0) %>% ggplot(aes(x= abs_correlation_change)) + geom_histogram(binwidth= .5)
+
+highLow %>% filter(fdr == 0) %>% ggplot(aes(x= abs_correlation_change)) + geom_histogram(binwidth= .5)
+
+```
 
 
+```{r}
+data("kegH")
+sigoraResconHigh <- sigora(GPSrepo= kegH, level= 2, queryList = conHigh)
+sigoraResconLow <- sigora(GPSrepo= kegH, level= 2, queryList = conLow)
+sigoraReshighLow <- sigora(GPSrepo= kegH, level= 2, queryList = highLow)
 ```
 
