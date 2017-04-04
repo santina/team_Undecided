@@ -8,7 +8,8 @@ output: html_document
 First, we load our data, the gene list pairs from the control/Th2-high network, control/Th2-low network, and Th2-high/Th2network (all from the DiNA step).
 ```{r}
 library(tidyverse)
-
+library('biomaRt')
+getwd()
 conHigh <- readRDS("../processed_data/controlHighResults.rds")
 conLow <- readRDS("../processed_data/controlLowResults.rds")
 highLow <- readRDS("../processed_data/highLowResults.rds")
@@ -35,24 +36,47 @@ hlFilter <- highLow[highLow$fdr==0,]
 
 chMatrix <- data.frame(do.call('rbind', strsplit(as.character(chFilter$gene_pair),'.',fixed=TRUE)))
 chMatrix$weight <- chFilter$abs_correlation_change
-chMatrix$X1 <- mapStuff(chMatrix$X1)
-chMatrix$X2 <- mapStuff(chMatrix$X2)
-chMatrix <- (chMatrix[order(-chMatrix$weight),])[1:500,]
+chMatrix$X1 <- factor(unlist(mapStuff(chMatrix$X1)))
+chMatrix$X2 <- factor(unlist(mapStuff(chMatrix$X2)))
+
+# erase blank rows
+chMatrix$X1[chMatrix$X1==""] <- NA
+chMatrix$X2[chMatrix$X2==""] <- NA
+chMatrix <- na.omit(chMatrix)
+chMatrix <- data.frame((chMatrix[order(-chMatrix$weight),])[1:500,])
 
 clMatrix <- data.frame(do.call('rbind', strsplit(as.character(clFilter$gene_pair),'.',fixed=TRUE)))
 clMatrix$weight <- clFilter$abs_correlation_change
 clMatrix$X1 <- mapStuff(clMatrix$X1)
 clMatrix$X2 <- mapStuff(clMatrix$X2)
-clMatrix <- (clMatrix[order(-clMatrix$weight),])[1:500,]
+
+# erase blank rows
+clMatrix$X1[clMatrix$X1==""] <- NA
+clMatrix$X2[clMatrix$X2==""] <- NA
+clMatrix <- na.omit(clMatrix)
+clMatrix <- data.frame((clMatrix[order(-clMatrix$weight),])[1:500,])
 
 hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(hlFilter$gene_pair),'.',fixed=TRUE)))
 hlMatrix$weight <- hlFilter$abs_correlation_change
 hlMatrix$X1 <- mapStuff(hlMatrix$X1)
 hlMatrix$X2 <- mapStuff(hlMatrix$X2)
-hlMatrix <- (hlMatrix[order(-hlMatrix$weight),])[1:500,]
+
+# erase blank rows
+hlMatrix$X1[hlMatrix$X1==""] <- NA
+hlMatrix$X2[hlMatrix$X2==""] <- NA
+hlMatrix <- na.omit(hlMatrix)
+hlMatrix <- data.frame((hlMatrix[order(-hlMatrix$weight),])[1:500,])
 
 write.table(chMatrix, file = "chWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
 write.table(clMatrix, file = "clWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
 write.table(hlMatrix, file = "hlWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
+
+library(ggplot2)
+library(gridExtra)
+
+ggplot(conHigh, aes(gene_pair, fdr)) + geom_point()
+p2 <- ggplot(conLow, aes(gene_pair, fdr)) + geom_point()
+p3 <- ggplot(highLow, aes(gene_pair, fdr)) + geom_point()
+grid.arrange(p1, p2, p3, nrow = 3)
 ```
 
