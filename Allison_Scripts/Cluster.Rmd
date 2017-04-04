@@ -95,15 +95,35 @@ Now let's draw some graphs and look at our clusters
 ```{r, eval=FALSE, include=FALSE}
 library(ggplot2)
 library(gridExtra)
+library(scatterplot3d)
 # we're not going to re-generate our k-means clusters anymore, so run starting from here:
 metadata <- read.csv('metaCluster.csv', row.names = 1)
 asthma <- read.table('asthma.tsv')
 control <- read.table('control.tsv')
 
+# CLCA1 = ENSG00000016490
+# serpinB2 = ENSG00000197632
+# periostin = ENSG00000133110
+
+names(asthma)[names(asthma)=="ENSG00000016490"] <- "CLCA1"
+names(asthma)[names(asthma)=="ENSG00000197632"] <- "SerpinB2"
+names(asthma)[names(asthma)=="ENSG00000133110"] <- "Periostin"
+
+# re-make the clusters, because I killed them
+geneCluster <- data.frame(cluster = rep("", nrow(asthma)), stringsAsFactors = FALSE)
+rownames(geneCluster) <- rownames(asthma)
+for (i in 1:57) {
+  x <- which(metadata$ID == rownames(geneCluster)[i])
+  if (metadata[x,9] == 1)
+    geneCluster[i,1] = "Th2-high"
+  else
+    geneCluster[i,1] = "Th2-low"
+}
+
 # let's make some plots
-p1 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
-p2 <- ggplot(asthma, aes(ENSG00000016490, ENSG00000133110, color = geneCluster$cluster)) + geom_point()
-p3 <- ggplot(asthma, aes(ENSG00000133110, ENSG00000197632, color = geneCluster$cluster)) + geom_point()
+p1 <- ggplot(asthma, aes(CLCA1, SerpinB2, color = geneCluster$cluster)) + geom_point() + scale_colour_manual(values=c("#34675C", "#7DA3A1"), name = "Cluster")
+p2 <- ggplot(asthma, aes(CLCA1, Periostin, color = geneCluster$cluster)) + geom_point() + scale_colour_manual(values=c("#34675C", "#7DA3A1"), name = "Cluster")
+p3 <- ggplot(asthma, aes(SerpinB2, Periostin, color = geneCluster$cluster)) + geom_point() + scale_colour_manual(values=c("#34675C", "#7DA3A1"), name = "Cluster")
 grid.arrange(p1, p2, p3, nrow = 3)
 
 # save
@@ -113,8 +133,20 @@ ggsave(file="k_means.png", g) #saves g
 
 Now let's look at our clusters with a 3D scatterplot.
 ```{r, eval=FALSE, include=FALSE}
+png("3d.png", width = 7, height = 5, units = 'in', res = 300)
 attach(asthma)
-scatterplot3d(ENSG00000016490, ENSG00000197632, ENSG00000133110, color = geneCluster$cluster)
+# define colours for the clusters
+geneCluster$color[geneCluster$cluster == "Th2-high"] <- "#34675C"
+geneCluster$color[geneCluster$cluster == "Th2-low"] <- "#7DA3A1"
+# plot
+scatterplot3d(CLCA1, SerpinB2, Periostin, color = geneCluster$color, pch=19, grid=TRUE)
+legend("topleft", inset=.05,      # location and inset
+    bty="n", cex=.7,              # suppress legend box, shrink text 50%
+    title="Cluster",
+    c("Th2-high", "Th2-low"), fill=c("#34675C", "#7DA3A1"))
+detach(asthma)
+# save plot
+dev.off()
 ```
 
 Now let's re-cluster with our controls and look at the scatterplots.
