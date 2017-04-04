@@ -17,17 +17,20 @@ conHigh <- readRDS("~/Desktop/team_Undecided/processed_data/controlHighResults.r
 conLow <- readRDS("~/Desktop/team_Undecided/processed_data/controlLowResults.rds")
 highLow <- readRDS("~/Desktop/team_Undecided/processed_data/highLowResults.rds")
 
-#conHigh <- conHigh[conHigh$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+conHigh <- conHigh[conHigh$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 
-#conLow <- conLow[conLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+conLow <- conLow[conLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 
-#highLow <- highLow[highLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+highLow <- highLow[highLow$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
 
-conHigh %>% filter(fdr == 0) %>% ggplot(aes(x= abs_correlation_change)) + geom_histogram(binwidth= .5)
 
-conLow %>% filter(fdr == 0) %>% ggplot(aes(x= abs_correlation_change)) + geom_histogram(binwidth= .5)
 
-highLow %>% filter(fdr == 0) %>% ggplot(aes(x= abs_correlation_change)) + geom_histogram(binwidth= .5)
+
+test <- conHigh %>% filter(fdr <= 0.05) %>% filter(abs_correlation_change >5)
+test1 <- conLow %>% filter(fdr <= 0.05) %>% filter(abs_correlation_change >5)
+test2 <- highLow %>% filter(fdr <= 0.05) %>% filter(abs_correlation_change > 5)
+
+intersect(test$gene_pair, test1$gene_pair) %>% unique()
 
 ```
 
