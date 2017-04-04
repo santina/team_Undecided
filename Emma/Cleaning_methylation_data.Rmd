@@ -1,5 +1,5 @@
 ---
-title: "Exploration of Methylation data"
+title: "Exploration of Methylation and RNAseq data"
 author: "Emma Graham"
 date: "March 25, 2017"
 output: github_document
@@ -49,13 +49,8 @@ library(limma)
 library(gplots)
 library(RColorBrewer)
 library(RCurl)
-
-source("https://bioconductor.org/biocLite.R")
-biocLite("lumi")
 library(lumi)
-biocLite("limma")
 library(limma)
-biocLite("biomaRt")
 library(biomaRt)
 setwd("~/Desktop/Masters/STAT540/Team_Undecided")
 rna_data <- read.table(file = "Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", 
@@ -286,11 +281,8 @@ sigth2highvslow <- toptable(EbFit, coef = "Th2highvsTh2low",n = Inf)
 #Figuring out what methylation probe to take
 
 ```{r}
-source("http://bioconductor.org/biocLite.R")
-
 
 #identify Ensembl ID for each CpG significantly different in Ctl vs Th2 low. 
-
 human = useMart("ensembl", dataset = "hsapiens_gene_ensembl")
 getProbeEnsemblNames <- function(data_frame){
 	CpG <- rownames(data_frame)
@@ -307,14 +299,11 @@ for ( entry in 1:(num/10000)){
 	if (i + 10000 <= num){
 		annotated_sigCtlvsTh2low <- getProbeEnsemblNames(sigCtlvsTh2low[i:(i + 10000),])
 		i <- i + 10000
-		print("I'm here")
 	} else{
 		annotated_sigCtlvsTh2low <- getProbeEnsemblNames(sigCtlvsTh2low[i:num,])
 		i <- i + (num -i)
-		print("This is the end")
 	}
 	big_annotated_sigCtlvsTh2low <- rbind(big_annotated_sigCtlvsTh2low, annotated_sigCtlvsTh2low)
-	print("This is the very end of thefunction")
 }
 
 #define ensembl names for Ctl vs Th2 high
