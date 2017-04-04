@@ -13,20 +13,42 @@ conHigh <- readRDS("../processed_data/controlHighResults.rds")
 conLow <- readRDS("../processed_data/controlLowResults.rds")
 highLow <- readRDS("../processed_data/highLowResults.rds")
 
+
+# replace gene names with a function
+mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
+
+mapStuff <- function(genes) {
+  geneList <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id", "entrezgene"),values=genes,mart=mart)
+  new <- data.frame(gene=rep("", length(genes)), stringsAsFactors=FALSE)  
+  for (i in 1:nrow(geneList)) {
+    x <- which(genes == geneList[i,1])
+    new[x,1] = geneList[i,2]
+  }
+  return(new)
+}
+
+# time to grab the gene names to find our three genes
+
 chFilter <- conHigh[conHigh$fdr==0,]
 clFilter <- conLow[conLow$fdr==0,]
 hlFilter <- highLow[highLow$fdr==0,]
 
 chMatrix <- data.frame(do.call('rbind', strsplit(as.character(chFilter$gene_pair),'.',fixed=TRUE)))
 chMatrix$weight <- chFilter$abs_correlation_change
+chMatrix$X1 <- mapStuff(chMatrix$X1)
+chMatrix$X2 <- mapStuff(chMatrix$X2)
 chMatrix <- (chMatrix[order(-chMatrix$weight),])[1:500,]
 
 clMatrix <- data.frame(do.call('rbind', strsplit(as.character(clFilter$gene_pair),'.',fixed=TRUE)))
 clMatrix$weight <- clFilter$abs_correlation_change
+clMatrix$X1 <- mapStuff(clMatrix$X1)
+clMatrix$X2 <- mapStuff(clMatrix$X2)
 clMatrix <- (clMatrix[order(-clMatrix$weight),])[1:500,]
 
 hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(hlFilter$gene_pair),'.',fixed=TRUE)))
 hlMatrix$weight <- hlFilter$abs_correlation_change
+hlMatrix$X1 <- mapStuff(hlMatrix$X1)
+hlMatrix$X2 <- mapStuff(hlMatrix$X2)
 hlMatrix <- (hlMatrix[order(-hlMatrix$weight),])[1:500,]
 
 write.table(chMatrix, file = "chWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
