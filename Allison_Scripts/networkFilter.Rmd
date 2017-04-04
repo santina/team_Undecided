@@ -1,6 +1,6 @@
 ---
-title: "Pathway Enrichment"
-author: "Arjun Baghela"
+title: "Network Filtering"
+author: "Allison Tai"
 date: "4/3/2017"
 output: html_document
 ---
@@ -47,8 +47,8 @@ chMatrix <- data.frame((chMatrix[order(-chMatrix$weight),])[1:500,])
 
 clMatrix <- data.frame(do.call('rbind', strsplit(as.character(clFilter$gene_pair),'.',fixed=TRUE)))
 clMatrix$weight <- clFilter$abs_correlation_change
-clMatrix$X1 <- mapStuff(clMatrix$X1)
-clMatrix$X2 <- mapStuff(clMatrix$X2)
+clMatrix$X1 <- factor(unlist(mapStuff(clMatrix$X1)))
+clMatrix$X2 <- factor(unlist(mapStuff(clMatrix$X2)))
 
 # erase blank rows
 clMatrix$X1[clMatrix$X1==""] <- NA
@@ -58,8 +58,8 @@ clMatrix <- data.frame((clMatrix[order(-clMatrix$weight),])[1:500,])
 
 hlMatrix <- data.frame(do.call('rbind', strsplit(as.character(hlFilter$gene_pair),'.',fixed=TRUE)))
 hlMatrix$weight <- hlFilter$abs_correlation_change
-hlMatrix$X1 <- mapStuff(hlMatrix$X1)
-hlMatrix$X2 <- mapStuff(hlMatrix$X2)
+hlMatrix$X1 <- factor(unlist(mapStuff(hlMatrix$X1)))
+hlMatrix$X2 <- factor(unlist(mapStuff(hlMatrix$X2)))
 
 # erase blank rows
 hlMatrix$X1[hlMatrix$X1==""] <- NA
