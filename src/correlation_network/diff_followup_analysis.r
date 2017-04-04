@@ -205,32 +205,94 @@ getDiffCorResults <- function(comparisonCoef, maxExpressionChange = Inf) {
 
 # -----------------
 
-plotPValueDistribution("control.th2high")
-plotPValueDistribution("control.th2low")
-plotPValueDistribution("th2high.th2low")
-
-controlHighResults <- readRDS("processed_data/controlHighResults.rds")
-sigControlHighResults <-controlHighResults %>% filter(fdr <= 0)
-sigControlHighResults$gene_pair %>% filterGenePairs("control.th2high", 10) %>% nrow()
-
-# saveRDS(controlHighResults, "processed_data/controlHighResults.rds")
+# plotPValueDistribution("control.th2high")
+# plotPValueDistribution("control.th2low")
+# plotPValueDistribution("th2high.th2low")
 # 
-controlLowResults <- getDiffCorResults("control.th2low")
-saveRDS(controlLowResults, "processed_data/controlLowResults.rds")
+# controlHighResults <- readRDS("processed_data/controlHighResults.rds")
+# sigControlHighResults <-controlHighResults %>% filter(fdr <= 0)
+# sigControlHighResults$gene_pair %>% filterGenePairs("control.th2high", 10) %>% nrow()
 # 
-highLowResults <- getDiffCorResults("th2high.th2low")
-saveRDS(highLowResults, "processed_data/highLowResults.rds")
-
-filteredGenePairs <- filterGenePairs(controlHighResults$gene_pair, "control.th2high", 10)
-
-sigGenePairs %>% filter(gene_pair %in% filteredGenePairs) %>% View()
+# # saveRDS(controlHighResults, "processed_data/controlHighResults.rds")
+# # 
+# controlLowResults <- getDiffCorResults("control.th2low")
+# saveRDS(controlLowResults, "processed_data/controlLowResults.rds")
+# # 
+# highLowResults <- getDiffCorResults("th2high.th2low")
+# saveRDS(highLowResults, "processed_data/highLowResults.rds")
+# 
+# filteredGenePairs <- filterGenePairs(controlHighResults$gene_pair, "control.th2high", 10)
+# 
+# sigGenePairs %>% filter(gene_pair %in% filteredGenePairs) %>% View()
 
 # examples on how to use the interface :)
 # getSigGenePairs("control.th2high") %>% View()
 
-plotExpressionCorrelations("th2high.th2low", "ENSG00000065485.ENSG00000090512")
 
-plotPermDistribution("th2high.th2low", "ENSG00000065485.ENSG00000090512")
+plotPermDistributionCOPY <- function(comparisonCoef, genePair) {
+  diffCorValue <- diffCorrelations[[comparisonCoef]] %>% getDiffCor(genePair)
+  pValue <- pValueMatrices[[comparisonCoef]] %>% getPValue(genePair)
+  distribution <- nullDiffCorrelations[[comparisonCoef]] %>% getPermutationDistribution(genePair)
+  
+  distribution %>% 
+    ggplot(aes(permuted_value)) +
+    geom_density() +
+    geom_vline(xintercept = diffCorValue) +
+    ggtitle(paste0("Th2high-Th2low", ": ", "TNF vs NOS2", ": P-value = ", pValue)) +
+    xlab("Absolute correlation change weighted by differential methylation")
+}
+
+
+plotPermDistributionCOPY("th2high.th2low", "ENSG00000232810.ENSG00000007171")
+
+
+
+
+
+
+plotExpressionCorrelationsCOPY <- function(comparisonCoef, genePair) {
+  comparisonGroups <- comparisonCoef %>% splitByDot()
+  firstGroup <- comparisonGroups[1]
+  secondGroup <- comparisonGroups[2]
+  
+  genes <- genePair %>% splitByDot()
+  firstGene <- genes[1]
+  secondGene <- genes[2]
+  
+  firstGroupSamples <- (sampleMetadata %>% filter(group == firstGroup))$ID
+  secondGroupSamples <- (sampleMetadata %>% filter(group == secondGroup))$ID
+  
+  expressionData <- expressionCounts %>% 
+    filter(geneId %in% genes) %>% 
+    transposeExpressionData() %>% 
+    right_join(sampleMetadata %>% 
+                 filter(group %in% comparisonGroups) %>% 
+                 select(sampleId = ID, group))
+  
+  
+  firstGroupCor <- cor((expressionData %>% filter(group == "th2high"))[[firstGene]],
+                        (expressionData %>% filter(group == "th2high"))[[secondGene]])
+  
+  secondGroupCor <- cor((expressionData %>% filter(group == "th2low"))[[firstGene]],
+                        (expressionData %>% filter(group == "th2low"))[[secondGene]])
+  
+  absDifference <- abs(firstGroupCor - secondGroupCor)
+  
+  
+  
+  p <- expressionData %>% ggplot(aes(x = expressionData[[firstGene]], expressionData[[secondGene]],
+                                     color = expressionData$group))
+  p + geom_point() +
+    geom_smooth(method = "lm", se = FALSE) +
+    ggtitle(paste0("Th2high-Th2low: ", "Th2high r = ", round(firstGroupCor, digits = 3), ", ", 
+                   "Th2low r = ", round(secondGroupCor, digits = 3), ", ", 
+                   "Absolute difference: ", round(absDifference, digits = 3))) +
+    xlab(paste0("Expression of ", "TNF")) +
+    ylab(paste0("Expression of ", "NOS2")) + scale_color_manual(values=c("#86AC41", "#34675C"))
+}
+
+plotExpressionCorrelationsCOPY("th2high.th2low", "ENSG00000232810.ENSG00000007171")
+
 
 #
 
