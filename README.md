@@ -14,4 +14,4 @@ Arjun Baghela @abaghela
 
 ## Applying Weighted Differential Co-expression Analysis to Characterize Th2 High and Low Asthma Endotypes
 
-![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/teamUndecided_Pipeline.jpg "Pipeline")
+![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/teamUndecided_Pipeline.png "Pipeline")
