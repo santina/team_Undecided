@@ -35,7 +35,7 @@ This designated 28 patients as Th2-high, and 29 patients as Th2-low.
 After, we performed differential expression analysis with the RNA-seq data using edgeR to extract a list of "interesting genes" (or genes with high differential expression between our three groups) based on p-value and FDR.  This step was vital, because performing differential network analysis is computationally heavy, so running our entire set of genes through it is infeasible.  Using edgeR, we obtained a list of genes, ordered by FDR.  Setting a threshold of FDR <= 0.01 filtered our list down to 571, which we calculated takes around 30 hours to run for our differential network analysis step.
 
 ## 3. Differential Methylation Analysis
-[Source Code]()
+[Source Code]()  
 *Input*: the cleaned methylation data from post-data inspection.  
 *Output*: three lists (corresponding to control vs high, control vs low, and high vs low) of weights associated with each gene, depending how differentially methylated they are (the more, the stronger the weight).  
 
