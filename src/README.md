@@ -1,11 +1,11 @@
 # team_Undecided
 
-This repository contains all relevant scripts/data for our STAT540 project. 
+This folder contains the pipeline for our project, in the form of .rmd files containing our source code.  Below, we provide the links to our different stages, for quick access.  Note that each .rmd file contains both link to the previous stage, as well as a link to the next.
 
-Below are links to our proposal & progress report. 
-* [Proposal](https://github.com/STAT540-UBC/team_Undecided/blob/master/project_proposal.md)
-* [Progress Report](https://github.com/STAT540-UBC/team_Undecided/blob/master/progress_report.md)
-
-# TITLE
-
-![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/teamUndecided_Pipeline.jpg "Pipeline")
+* [Data Inspection]()
+* [K-means Clustering for Patient Differentiation]()
+* [Differential Expression]()
+* [Differential Methylation]()
+* [Correlation Network Generation]()
+* [Permutation Tests]()
+* [Meta-Network Generation and Visualization]()
