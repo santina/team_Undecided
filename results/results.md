@@ -32,5 +32,5 @@ Here, as we lack clinical data, we decided to classify asthma as either Th2-high
 *Output*: three gene pair lists, with the associated weight of each edge.  
 
 ## 5. Network and Gene-Pair Visualization
-*put*: the three gene pair lists, with edge weights.  
+*Input*: the three gene pair lists, with edge weights.  
 *Output*: A meta-network used for visualizing significant gene pairs, and plots of how the expression of various significant gene pairs differs.  
