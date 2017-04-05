@@ -15,8 +15,8 @@ The data we analyzed was obtained from GEO ([GSE85568](https://www.ncbi.nlm.nih.
 
 The repository is organized in 4 folders.<br/>
 [Data](https://github.com/STAT540-UBC/team_Undecided/tree/master/data) - contains raw data and output data. <br/>
-[Documents](https://github.com/STAT540-UBC/team_Undecided/tree/master/docs) <br/> - contains project reports.
-[Source Code](https://github.com/STAT540-UBC/team_Undecided/tree/master/src) <br/> - contains all code relevant to the project.
+[Documents](https://github.com/STAT540-UBC/team_Undecided/tree/master/docs) - contains project reports. <br/> 
+[Source Code](https://github.com/STAT540-UBC/team_Undecided/tree/master/src) - contains all code relevant to the project. <br/> 
 [Results](https://github.com/STAT540-UBC/team_Undecided/tree/master/results) - contains output plots and relevant source code links.
 
 Here are some quick links to relevant files in our repo. <br/>
