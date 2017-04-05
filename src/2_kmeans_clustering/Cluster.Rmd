@@ -171,15 +171,3 @@ for (i in 1:85) {
 }
 
 ```
-
-Looks like 2 is lowest, 3 is medium, and 1 is high.
-
-Extract the pathways associated with CLCA1, periostin, and serpinB2
-
-```{r}
-#library('sigora')
-# 5055 is serpinB2
-# 1179 is CLCA1
-# 10631 is periostin
-#pathways <- ora(c(1179), kegH)
-``````
