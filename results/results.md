@@ -1,6 +1,6 @@
 # Results
 
-In this document, we walk through our results, as well as the main analyses conducted.  We'll follow the order specified by our pipeline:
+In this file, we walk through our results, as well as the main analyses conducted.  We'll follow the order specified by our pipeline:
 ![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/teamUndecided_Pipeline.png "Pipeline")
 
 ## 0. Data Inspection
@@ -16,7 +16,7 @@ Looking at our figures, we can see that
 *Output*: a list that assigns every patient to a cluster, depending on if they were designated Th2-high, Th2-low, or simply belonged in the control group.  
 
 Here, as we lack clinical data, we decided to classify asthma as either Th2-high or Th2-low based on the expression of three genes: CLCA1, serpinB2, and periostin.  These genes are often used to differentiate between asthma types in literature.  To do this, we ran k-means clustering on the normalized RNA-seq counts of asthma patients with k = 2.  The result is as shown: 
-
+![3dscatterplot](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/3D.png "3D Scatterplot")
 
 ## 2. Differential Expression Analysis for RNA-seq Data
 *Input*: the clusters associated with each patient from the previous step.  
