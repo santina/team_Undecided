@@ -30,18 +30,21 @@ This designated 28 patients as Th2-high, and 29 patients as Th2-low.
 ## 2. Differential Expression Analysis for RNA-seq Data
 [Source Code]()  
 *Input*: the clusters associated with each patient from the previous step.  
-*Output*: a list of "interesting genes." (The most differentially expressed genes between the three groups)   
+*Output*: a list of "interesting genes." (The most differentially expressed genes between the three groups.)   
 
 After, we performed differential expression analysis with the RNA-seq data using edgeR to extract a list of "interesting genes" (or genes with high differential expression between our three groups) based on p-value and FDR.  This step was vital, because performing differential network analysis is computationally heavy, so running our entire set of genes through it is infeasible.  Using edgeR, we obtained a list of genes, ordered by FDR.  Setting a threshold of FDR <= 0.01 filtered our list down to 571, which we calculated takes around 30 hours to run for our differential network analysis step.
 
 ## 3. Differential Methylation Analysis
-[Source Code]()  
+[Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspection%26qc/Cleaning_methylation_data.md)  
 *Input*: the cleaned methylation data from post-data inspection.  
 *Output*: three lists (corresponding to control vs high, control vs low, and high vs low) of weights associated with each gene, depending how differentially methylated they are (the more, the stronger the weight).  
 
+Here, we 
 ## 4. Correlation Network Generation and Differential Network Analysis with Permutation Testing
+[Source Code]()
 *Input*: the list of "interesting genes" from the DEA step, and the lists of gene weights from the differential methylation analysis.  
 *Output*: three gene-pair lists, with the associated weight of each edge.  
+
 
 ## 5. Network and Gene-Pair Visualization
 *Input*: the three gene pair lists, with edge weights.  
