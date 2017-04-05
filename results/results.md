@@ -28,7 +28,7 @@ In this step, as we lack clinical data, we decided to classify asthma as either 
 This designated 28 patients as Th2-high, and 29 patients as Th2-low.  
 
 ## 2. Differential Expression Analysis for RNA-seq Data
-[Source Code]()
+[Source Code]()  
 *Input*: the clusters associated with each patient from the previous step.  
 *Output*: a list of "interesting genes." (The most differentially expressed genes between the three groups)   
 
