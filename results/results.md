@@ -18,6 +18,8 @@ Namely, we performed PCA using limma of the RNA-seq data with respect to the var
 
 Looking at the first figure, we can see that certain PCs do correlate with East Asian ethnicity and smoking status in the RNA-seq data, but because PCs 16, 36, and 81 explain little variance, we decided that additional batch correction was unnecessary.  In the other figure, we see that significant PCs do correlate with gender, age, and ethnicity.  To deal with this, these variables will be controlled for when we perform differential methylation analysis.   
 
+As we have a very large number of probes for the methylation data (over 350,000), we filtered out some probes found to be non-differentially methylated in most cells.  This removed around 40,000 probes, shrinking our dataset.  
+
 ## 1. K-Means Clustering for Patient Differentiation
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd)  
 *Input*: the normalized RNA-seq counts.  
@@ -25,21 +27,21 @@ Looking at the first figure, we can see that certain PCs do correlate with East 
 
 In this step, as we lack clinical data, we decided to classify asthma as either Th2-high or Th2-low based on the expression of three genes: CLCA1, serpinB2, and periostin.  These genes are often used to differentiate between asthma types in literature.  To do this, we ran k-means clustering on the normalized RNA-seq counts of asthma patients with k = 2.  The result is as shown: 
 ![3dscatterplot](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/3D.png "3D Scatterplot")
-This designated 28 patients as Th2-high, and 29 patients as Th2-low.  
+This designated 28 patients as having higher expression in the three genes (Th2-high), and 29 patients having lower expression (Th2-low).  This supports the findings in literature that suggests they can be used as biomarkers for asthma endotypes.  
 
 ## 2. Differential Expression Analysis for RNA-seq Data
 [Source Code]()  
 *Input*: the normalized RNA-seq count data; the clusters associated with each patient from the previous step.  
 *Output*: a list of "interesting genes." (The most differentially expressed genes between the three groups.)   
 
-After, we performed differential expression analysis with the RNA-seq data using edgeR to extract a list of "interesting genes" (or genes with high differential expression between our three groups) based on p-value and FDR.  This step was vital, because performing differential network analysis is computationally heavy, so running our entire set of genes through it is infeasible.  Using edgeR, we obtained a list of genes, ordered by FDR.  Setting a threshold of FDR <= 0.01 filtered our list down to 571, which we calculated takes around 30 hours to run for our differential network analysis step.
+After, we performed differential expression analysis with the RNA-seq data using edgeR to extract a list of "interesting genes" (or genes with high differential expression between our three groups) based on p-value and FDR.  This step was vital, because performing differential network analysis is computationally heavy, so running our entire set of genes through it is infeasible.  Using edgeR, we obtained a list of genes, ordered by FDR.  Setting a threshold of FDR <= 0.01 filtered our list down to 571, which we calculated takes around 30 hours to run for our differential network analysis step.  
 
 ## 3. Differential Methylation Analysis
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspection%26qc/Cleaning_methylation_data.md)  
 *Input*: the cleaned methylation data from post-data inspection; the clusters associated with each patient from the previous step.  
 *Output*: three lists (corresponding to control vs high, control vs low, and high vs low) of weights associated with each gene, depending how differentially methylated they are (the more, the stronger the weight).  
 
-Here, we removed non-variable probes, then 
+We then mapped each probe to their gene loci, to obtain the methylation count 
 ## 4. Correlation Network Generation and Differential Network Analysis with Permutation Testing
 [Source Code]()
 *Input*: the list of "interesting genes" from the DEA step, and the lists of gene weights from the differential methylation analysis.  
