@@ -38,15 +38,22 @@ After, we performed differential expression analysis with the RNA-seq data using
 ## 3. Differential Methylation Analysis
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspection%26qc/Cleaning_methylation_data.md)  
 *Input*: the cleaned methylation data from post-data inspection; the clusters associated with each patient from the previous step.  
-*Output*: three lists (corresponding to control vs high, control vs low, and high vs low) of weights associated with each gene, depending how differentially methylated they are (the more, the stronger the weight).  
+*Output*: three lists (corresponding to control vs high, control vs low, and high vs low) of weights associated with each gene, depending on how differentially methylated they are (the more, the stronger the weight).  
 
-We then mapped each probe to their gene loci, to obtain the methylation count 
+We then mapped each probe to their gene loci, to obtain the methylation count associated with each gene for each patient.  We then performed differential methylation analysis using edgeR to obtain "weights" by taking -log2(FDR) associated with each gene for each comparison.  
+
 ## 4. Correlation Network Generation and Differential Network Analysis with Permutation Testing
 [Source Code]()  
 *Input*: the list of "interesting genes" from the DEA step, and the lists of gene weights from the differential methylation analysis.  
 *Output*: three gene-pair lists, with the associated weight of each edge.  
 
-
+W
 ## 5. Network and Gene-Pair Visualization
+[Source Code]()  
 *Input*: the three gene pair lists, with edge weights.  
 *Output*: A meta-network used for visualizing significant gene pairs, and plots of how the expression of various significant gene pairs differs.  
+
+## 6. Pathway Enrichment
+[Source Code]()  
+*Input*: the three gene pair lists, with edge weights.  
+*Output*: list of significant pathways, obtained by running our genes through KEGG.  
