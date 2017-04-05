@@ -42,7 +42,7 @@ After, we performed differential expression analysis with the RNA-seq data using
 
 We then mapped each probe to their gene loci, to obtain the methylation count 
 ## 4. Correlation Network Generation and Differential Network Analysis with Permutation Testing
-[Source Code]()
+[Source Code]()  
 *Input*: the list of "interesting genes" from the DEA step, and the lists of gene weights from the differential methylation analysis.  
 *Output*: three gene-pair lists, with the associated weight of each edge.  
 
