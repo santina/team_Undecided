@@ -7,16 +7,18 @@ In this file, we walk through our results, as well as the main analyses conducte
 *Input*: the normalized RNA-seq counts and methylation data, as downloaded from GEO.  
 *Output*: none, as we deemed that no correction was necessary.  
 To begin, we conducted exploratory analysis of both the RNA-seq and methylation data to check if further cleaning or correction was necessary.
-Namely, we performed PCA of the RNA-seq data with respect to certain covariates, to see if they cluster.  
+Namely, we performed PCA of the RNA-seq data with respect to the various covariates, to see if they cluster.  
 (P-value figures goes here)  
 Looking at our figures, we can see that 
 
 ## 1. K-Means Clustering for Patient Differentiation
+[source code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd)
 *Input*: the normalized RNA-seq counts.  
 *Output*: a list that assigns every patient to a cluster, depending on if they were designated Th2-high, Th2-low, or simply belonged in the control group.  
 
 Here, as we lack clinical data, we decided to classify asthma as either Th2-high or Th2-low based on the expression of three genes: CLCA1, serpinB2, and periostin.  These genes are often used to differentiate between asthma types in literature.  To do this, we ran k-means clustering on the normalized RNA-seq counts of asthma patients with k = 2.  The result is as shown: 
 ![3dscatterplot](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/3D.png "3D Scatterplot")
+This designated 28 patients as Th2-high, and 29 patients as Th2-low.  
 
 ## 2. Differential Expression Analysis for RNA-seq Data
 *Input*: the clusters associated with each patient from the previous step.  
