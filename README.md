@@ -14,10 +14,10 @@ Arjun Baghela | [@abaghela](https://github.com/abaghela)
 The data we analyzed was obtained from GEO ([GSE85568](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE85568)). The data was described and analyzed in the 2016 publication, DNA methylation in lung cells is a key modulator of asthma endotypes and genetic risk, by the Carole Ober lab of The University of Chicago ([PMID: 27942592](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5139904/)).
 
 The repository is organized in 4 folders.<br/>
-[Data](https://github.com/STAT540-UBC/team_Undecided/tree/master/data) <br/>
-[Documents](https://github.com/STAT540-UBC/team_Undecided/tree/master/docs) <br/>
-[Source Code](https://github.com/STAT540-UBC/team_Undecided/tree/master/src) <br/>
-[Results](https://github.com/STAT540-UBC/team_Undecided/tree/master/results)
+[Data](https://github.com/STAT540-UBC/team_Undecided/tree/master/data) - contains raw data and output data. <br/>
+[Documents](https://github.com/STAT540-UBC/team_Undecided/tree/master/docs) <br/> - contains project reports.
+[Source Code](https://github.com/STAT540-UBC/team_Undecided/tree/master/src) <br/> - contains all code relevant to the project.
+[Results](https://github.com/STAT540-UBC/team_Undecided/tree/master/results) - contains output plots and relevant source code links.
 
 Here are some quick links to relevant files in our repo. <br/>
 [Raw Data](https://github.com/STAT540-UBC/team_Undecided/tree/master/data/raw_data) <br/>
