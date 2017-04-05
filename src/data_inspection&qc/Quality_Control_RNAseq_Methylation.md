@@ -8,6 +8,8 @@ Cleaning RNAseq data
 
 The normalized count table has been downloaded from the GEO repository. The methylation data will be extracted from the SOFT file using the GEOquery package.
 
+This is an initial look at how control and asthma patients cluster, and how confounders affect patient groupings. 
+
 ``` r
 setwd("/Users/emmagraham/Desktop/Masters/STAT540/TeamUndecided/Emma")
 library(GEOquery)
@@ -167,8 +169,8 @@ library(data.table)
 ``` r
 #data <- getGEO(filename = "GSE85568.soft")
 
-toy_data <- read.table(file = "../Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", header = TRUE, check.names = FALSE)
-meta_data <- read.csv(file = "../Raw_Data/GSE85566_metadata.txt", na.strings = c(".", ""))
+toy_data <- read.table(file = "../../Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", header = TRUE, check.names = FALSE)
+meta_data <- read.csv(file = "../../Raw_Data/GSE85566_metadata.txt", na.strings = c(".", ""))
 
 
 #Some light data cleaning so that our labels of our meta data and toy data are the same. Arrange by gender
@@ -961,12 +963,7 @@ non_int <- melted %>% filter(is.integer(sample_values) == FALSE)
 big_table <- big_table + 1
 #dds_meth <- DESeqDataSetFromMatrix(countData = big_table, colData = meta_data, design = ~ 1)
 #vsd_meth <- varianceStabilizingTransformation(dds, blind=FALSE)
-
-
-plot.new()
 ```
-
-![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ``` r
 data <- prcomp(t(big_table))
@@ -977,11 +974,6 @@ autoplot(data, data = meta_data, colour = "Gender") + ggtitle("Role of Gender in
 
 ![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-8-2.png)
 
-``` r
-plot.new()
-```
-
-![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 ``` r
 autoplot(data, data = meta_data, colour = "Status") + ggtitle("Role of Disease status in methylation data")
@@ -991,23 +983,10 @@ autoplot(data, data = meta_data, colour = "Status") + ggtitle("Role of Disease s
 
 ``` r
 #look at ethnicity
-plot.new()
-```
-
-![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-10-1.png)
-
-``` r
 autoplot(data, data = meta_data, colour = "Ethnicity") + ggtitle("Role of Ethnicity in methylation data")
 ```
 
 ![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-10-2.png)
-
-``` r
-#look at the effect of being a current smoker
-plot.new()
-```
-
-![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
 ``` r
 autoplot(data, data = meta_data, colour = "current_smoker") + ggtitle("Role of smoking in methylation data")
@@ -1016,29 +995,18 @@ autoplot(data, data = meta_data, colour = "current_smoker") + ggtitle("Role of s
 ![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-11-2.png)
 
 ``` r
-#look at the effect of smoking ever
-plot.new()
-```
-
-![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-12-1.png)
-
-``` r
 autoplot(data, data = meta_data, colour = "Smoke_Ever") + ggtitle("Role of ever smoking in methylation data")
 ```
 
 ![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-12-2.png)
 
+
+
+
 ``` r
 #effect of smoking a certain range of packs per year
-plot.new()
-```
-
-![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-13-1.png)
-
-``` r
 autoplot(data, data = meta_data, colour = "smoke_pack_years_1") + ggtitle("Methylation data as a function of how many packs per day is smoked")
 ```
 
 ![](Quality_Control_RNAseq_Methylation_files/figure-markdown_github/unnamed-chunk-13-2.png)
 
-Will clarify with authors further about what type of normalization was done to methylation data
