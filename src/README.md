@@ -6,6 +6,6 @@ This folder contains the pipeline for our project, in the form of .rmd files con
 * [K-means Clustering for Patient Differentiation]()
 * [Differential Expression]()
 * [Differential Methylation]()
-* [Correlation Network Generation]()
+* [Weighted Correlation Network]()
 * [Permutation Tests]()
-* [Meta-Network Generation and Visualization]()
+* [Network Visualization]()
