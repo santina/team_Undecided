@@ -1,6 +1,7 @@
 # Results
 
-In this file, we walk through our results, as well as the main analyses conducted.  We'll follow the order specified by our pipeline:
+In this file, we walk through our results, as well as the main analyses conducted.  We'll follow the order specified by our pipeline:  
+
 ![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/teamUndecided_Pipeline.png "Pipeline")
 We'll also give a link to the source code, and general description of the inputs and outputs of each section.  
 
@@ -10,6 +11,7 @@ We'll also give a link to the source code, and general description of the inputs
 *Output*: none, as we deemed that no correction was necessary.  
 To begin, we conducted exploratory analysis of both the RNA-seq and methylation data to check if further cleaning or correction was necessary.
 Namely, we performed PCA using limma of the RNA-seq data with respect to the various covariates, to see if they cluster, and obtained some figures demonstrating the p-values associated between the covariates and the PCs.  
+
 ![RNA-seq](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspection%26qc/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-3-1.png)
 ![methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspection%26qc/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-4-1.png)  
 
