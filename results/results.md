@@ -2,6 +2,7 @@
 
 In this file, we walk through our results, as well as the main analyses conducted.  We'll follow the order specified by our pipeline:
 ![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/teamUndecided_Pipeline.png "Pipeline")
+We'll also give a link to the source code, and general description of the inputs and outputs of each section.  
 
 ## 0. Data Inspection
 *Input*: the normalized RNA-seq counts and methylation data, as downloaded from GEO.  
@@ -12,7 +13,7 @@ Namely, we performed PCA of the RNA-seq data with respect to the various covaria
 Looking at our figures, we can see that 
 
 ## 1. K-Means Clustering for Patient Differentiation
-[source code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd)
+[Source code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd)  
 *Input*: the normalized RNA-seq counts.  
 *Output*: a list that assigns every patient to a cluster, depending on if they were designated Th2-high, Th2-low, or simply belonged in the control group.  
 
