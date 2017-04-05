@@ -5,100 +5,80 @@ date: "3/29/2017"
 output: html_document
 ---
 
-```{r}
+Load the necessary packages. 
+```{r, results='asis', warning=FALSE}
 library(edgeR)
 library(limma)
 library(tidyverse)
 library(magrittr)
-library(DESeq2)
 ```
 
+Load in the data.
 ```{r}
-countdata <- read.table(file= "Raw_Data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
-metadata <- read.csv(file= "Allison_Scripts/metaCluster.csv", row.names = 1)
+countdata <- read.table(file= "~/Desktop/team_Undecided/data/raw_data/rna_seq_data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
+metadata <- read.csv(file= "~/Desktop/team_Undecided/data/processed_data/metaCluster.csv", row.names = 1)
 
-metadata %<>% filter(ID %in% colnames(countdata))
+metadata %<>% filter(ID %in% colnames(countdata)) # Remove metadata rows that do not have
 
-metadata %>% group_by(Status) %>% tally()
+metadata %>% group_by(Status) %>% tally() # See how many patients there are in each group
 
-metadata %<>% arrange(cluster)
-metadata %>% group_by(cluster) %>% tally()
+metadata %<>% arrange(cluster) # arrange by classes
+metadata %>% group_by(cluster) %>% tally() # how many patients are there in each cluster- Control, Th2 high (1), Th2 low (2). 
 
-countdata <- countdata[,as.character(metadata$ID)]
+countdata <- countdata[,as.character(metadata$ID)] # Maintain the same order in both metadata and count data
 colnames(countdata) == metadata$ID
 
 metadata$cluster <- as.factor(metadata$cluster)
 str(metadata)
 
-remove <- c("ENSG00000016490", "ENSG00000197632", "ENSG00000133110")
+remove <- c("ENSG00000016490", "ENSG00000197632", "ENSG00000133110") # Remove the three genes we clustered on, to remove any biases. 
 countdata <- countdata[!(rownames(countdata) %in% remove),]
 ```
 
 ```{r}
-DGElist <- DGEList(counts= countdata, group= metadata$cluster)
-DGElist$samples$lib.size %>% min()
+DGElist <- DGEList(counts= countdata, group= metadata$cluster) # create DGEList to store data in
+DGElist$samples$lib.size %>% min() # Find lib size
 DGElist$counts %>% nrow()
 
-keep <- rowSums(cpm(DGElist)>0.275) >= 28
+keep <- rowSums(cpm(DGElist)>0.275) >= 28 # Filter lowly expressed genes. Genes with less than 5 counts as determined by library with smallest size. 
 
-DGElistFilt <- DGElist[keep, , keep.lib.sizes=FALSE]
+DGElistFilt <- DGElist[keep, , keep.lib.sizes=FALSE] 
 DGElistFilt$counts %>% nrow()
 
-DGElistFiltNorm<- calcNormFactors(DGElistFilt)
-DGElistFiltNorm$samples
+DGElistFiltNorm<- calcNormFactors(DGElistFilt) # calculate Norm factors
 ```
 
-
 ```{r}
-model.matrix(~cluster+Gender+Age+current_smoker, metadata)
-model.matrix(~cluster*Gender, metadata)
+design <- model.matrix(~0+group, data=DGElistFiltNorm$samples) #Create model matrix
+design %>% head()
 
+DGElistFiltNormDisp <- estimateDisp(DGElistFiltNorm, design) # Calculate dispersion 
+fit <- glmFit(DGElistFiltNormDisp, design) #GLM fit
 
-```
+lrt <- glmLRT(fit, contrast=c(-1,1,0)) 
+filtHighCon <- (topTags(lrt, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .01)
 
-
-
-
-
-
-
-
-
-```{r}
-designTEST <- model.matrix(~0+group, data=DGElistFiltNorm$samples)
-designTEST
-
-TEST <- estimateDisp(DGElistFiltNorm, designTEST)
-fitTEST <- glmFit(TEST, designTEST)
-
-lrtTEST <- glmLRT(fitTEST, contrast=c(-1,1,0))
-filt1 <- (topTags(lrtTEST, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .01)
-
-lrtTEST2 <- glmLRT(fitTEST, contrast=c(-1,0,1))
-filt2 <- (topTags(lrtTEST2, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
+lrt <- glmLRT(fit, contrast=c(-1,0,1))
+filtLowCon <- (topTags(lrt, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
 filt2 %>% nrow()
 
-lrtTEST3 <- glmLRT(fitTEST, contrast=c(0,1,-1))
-filt3 <- (topTags(lrtTEST3, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .01)
+lrt <- glmLRT(fit, contrast=c(0,1,-1))
+filtHighLow <- (topTags(lrt, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .01)
 
+union <- union(filtHighCon$Gene, filtLowCon$Gene) %>% union(filtHighLow$Gene) # Union of Important genes. 
+union %>% length() # List is 571 genes to do differential co-expression analysis on now. 
 
+write.table(union, "data/processed_data/DEGene_ForDiffCoexpAnalysis.txt") # Write it to a table. 
 
-heyya <- union(filt1$Gene, filt2$Gene) %>% union(filt3$Gene)
-heyya %>% length()
+##
+#emmaGenes <- read.table("~/Downloads/meth_CtlvsTh2high_pval0.01_ensemblID.txt", col.names = 2)
 
-write.table(heyya, "gene_list_Eric.txt")
+#emmaGenes2 <- read.table("~/Downloads/meth_CtlvsTh2low_pval0.01_ensemblID.txt", col.names = 2)
 
-
-emmaGenes <- read.table("~/Downloads/meth_CtlvsTh2high_pval0.01_ensemblID.txt", col.names = 2)
-
-emmaGenes2 <- read.table("~/Downloads/meth_CtlvsTh2low_pval0.01_ensemblID.txt", col.names = 2)
-
-emmaGenes %>% nrow()
-emmaGenes2 %>% nrow() 
-intersect(emmaGenes2$X2, emmaGenes$X2) %>% length()
+#emmaGenes %>% nrow()
+#emmaGenes2 %>% nrow() 
+#intersect(emmaGenes2$X2, emmaGenes$X2) %>% length()
 ```
-
-
 
 
 
@@ -109,10 +89,8 @@ intersect(emmaGenes2$X2, emmaGenes$X2) %>% length()
 ##### DONT LOOK AT THIS. 
 
 
-
-
 PRODUCES THE SAME RESULTS AS ABOVE. 
-```{r}
+```{r, eval=FALSE}
 # model.matrix(~cluster*Gender*Age*current_smoker, metadata) %>% colnames()
 
 design <- model.matrix(~group, data=DGElistFiltNorm$samples)
@@ -123,7 +101,7 @@ DGElistFiltNormDisp <- estimateDisp(DGElistFiltNorm, design)
 plotBCV(DGElistFiltNormDisp)
 ```
 
-```{r}
+```{r, eval=FALSE}
 fit <- glmFit(DGElistFiltNormDisp, design)
 lrtHigh_Con <- glmLRT(fit, coef = 2)
 lrtLow_Con <- glmLRT(fit, coef = 3)
@@ -141,7 +119,7 @@ intersect(DEHigh_ConFilt$Gene,DELow_ConFilt$Gene) %>% length()
 finalGeneList <- union(DEHigh_ConFilt$Gene,DELow_ConFilt$Gene)
 ```
 
-```{r}
+```{r, eval= FALSE}
 DGElistFiltNorm2 <- DGElistFiltNorm
 DGElistFiltNorm2$samples$group <- relevel(DGElistFiltNorm$samples$group, ref="2")
 
