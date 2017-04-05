@@ -60,7 +60,6 @@ filtHighCon <- (topTags(lrt, n= Inf))$table %>% rownames_to_column(var="Gene") %
 
 lrt <- glmLRT(fit, contrast=c(-1,0,1))
 filtLowCon <- (topTags(lrt, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .25)
-filt2 %>% nrow()
 
 lrt <- glmLRT(fit, contrast=c(0,1,-1))
 filtHighLow <- (topTags(lrt, n= Inf))$table %>% rownames_to_column(var="Gene") %>% filter(FDR <= .01)
@@ -68,16 +67,7 @@ filtHighLow <- (topTags(lrt, n= Inf))$table %>% rownames_to_column(var="Gene") %
 union <- union(filtHighCon$Gene, filtLowCon$Gene) %>% union(filtHighLow$Gene) # Union of Important genes. 
 union %>% length() # List is 571 genes to do differential co-expression analysis on now. 
 
-write.table(union, "data/processed_data/DEGene_ForDiffCoexpAnalysis.txt") # Write it to a table. 
-
-##
-#emmaGenes <- read.table("~/Downloads/meth_CtlvsTh2high_pval0.01_ensemblID.txt", col.names = 2)
-
-#emmaGenes2 <- read.table("~/Downloads/meth_CtlvsTh2low_pval0.01_ensemblID.txt", col.names = 2)
-
-#emmaGenes %>% nrow()
-#emmaGenes2 %>% nrow() 
-#intersect(emmaGenes2$X2, emmaGenes$X2) %>% length()
+write.table(union, "~/Desktop/team_Undecided/data/processed_data/DEGene_ForDiffCoexpAnalysis.txt") # Write it to a table. 
 ```
 
 
@@ -87,7 +77,6 @@ write.table(union, "data/processed_data/DEGene_ForDiffCoexpAnalysis.txt") # Writ
 
 
 ##### DONT LOOK AT THIS. 
-
 
 PRODUCES THE SAME RESULTS AS ABOVE. 
 ```{r, eval=FALSE}
@@ -129,7 +118,6 @@ DGElistFiltNorm2Disp <- estimateDisp(DGElistFiltNorm2, design2)
 
 fit2 <- glmFit(DGElistFiltNorm2Disp, design2)
 lrt2 <-  glmLRT(fit2, coef=3)
-
 
 DEHigh_Low <- (topTags(lrt2, n= Inf))$table
 

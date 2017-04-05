@@ -1,0 +1,54 @@
+---
+title: "Pathway Enrichment"
+author: "Arjun Baghela"
+date: "4/3/2017"
+output: html_document
+---
+
+Load Packages. I will be using SIGORA. It looks at pairs of genes that, as a combination, are specific to a single pathway. 
+```{r}
+library(tidyverse)
+library(sigora)
+```
+
+Read in the data. That is, the gene pair list that came out of the gene pair analysis. 
+```{r}
+conHighRaw <- readRDS("~/Desktop/team_Undecided/data/processed_data/controlHighResults.rds")
+conLowRaw <- readRDS("~/Desktop/team_Undecided/data/processed_data/controlLowResults.rds")
+highLowRaw <- readRDS("~/Desktop/team_Undecided/data/processed_data/highLowResults.rds")
+
+# Here, i am just getting gene pairs with an FDR of 0, But this is also arbtirary. 
+
+conHigh <- conHighRaw[conHighRaw$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+
+conLow <- conLowRaw[conLowRaw$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+
+highLow <- highLowRaw[highLowRaw$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% unique()
+
+conHigh %>% length() #532 genes from the pairs are unique with a fdr of 0. This is interesting, considering there were only 571 genes put into the diff network. 
+conLow %>% length()
+highLow %>% length()
+
+# I can also see which genes have the highest connectivity given a threshold 
+conHighRaw[conHighRaw$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% table() %>% sort() %>% tail(10)
+
+conLowRaw[conLowRaw$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% table() %>% sort() %>% tail(10)
+
+highLowRaw[highLowRaw$fdr==0,]$gene_pair %>% strsplit(".", fixed= TRUE) %>% unlist() %>% table() %>% sort() %>% tail(10)
+```
+
+The actual pathway enrichment is easy. 
+```{r}
+data("kegH")
+sigoraResconHigh <- sigora(GPSrepo= kegH, level= 2, queryList = conHigh)
+sigoraResconLow <- sigora(GPSrepo= kegH, level= 2, queryList = conLow)
+sigoraReshighLow <- sigora(GPSrepo= kegH, level= 2, queryList = highLow)
+
+sigoraResconHigh$summary_results %>% head() # This is an example of the output
+sigoraResconLow$summary_results %>% head()
+sigoraReshighLow$summary_results %>% head()
+
+setdiff(sigoraResconHigh$summary_results$description,sigoraResconLow$summary_results$description) # This is a way to see differences in pathway enrichment. 
+```
+
+We planned not do this, because we were not sure if it would be appropriate, because we are kind of losing the idea of looking at things in gene pairs. But it is definitely something we can explore more. 
