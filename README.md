@@ -31,10 +31,8 @@ It is clear from the proposal, progress report, and final poster that our projec
 
 Asthma, a disease characterized by chronic inflammation, affects over 235 million individuals worldwide (1). One way to define asthma populations is by T helper cell cytokine levels: patients can have high or low levels of Th2 cytokines. Th2-high patients tend to show more severe symptoms (2). Fortunately, gene expression biomarkers CLCA1, periostin, and serpinB2 have been shown to differentiate the asthma endotypes (2). Our goal is to better characterize differences between the endotypes using a network based approach. Using publicly available data, we present the application of differential co-expression analysis using the transcriptomic and methylation profiles of asthmatic and control patients. Our method first identifies pairs of differentially expressed and methylated genes to subsequently investigate changes in the interactome between endotypes. Assessing pairwise differential interactions between genes may lend more insight into the disease etiology than differential expression alone.
 
-Our pipeline goes as follows: 
-
+**Pipeline** <br/><br/>
 ![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/teamUndecided_Pipeline.png "Pipeline")
 
-Conclusions
-
-From our project, we seemed to come up with an interesting way to study gene expression data to obtain groups of "interesting genes". 
+**Conclusions** <br/>
+From our project, we seemed to come up with an interesting way to study gene expression data to obtain groups of "interesting genes". Furthermore, since we really wanted to somehow integrate the methylation and transcriptomic data, we came up with a edge weighting approach (based on differential methylation) to do that. We only looked at the top 500 most significant gene pair list to create a network in Cytoscape, however, one can look at many more if the FDR threshold was increased. Overall, our method can analyze the differences in the interactome between different conditions. 
