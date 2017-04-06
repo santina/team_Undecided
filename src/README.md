@@ -6,6 +6,5 @@ This folder contains the pipeline for our project, in the form of .rmd files con
 * [K-means Clustering for Patient Differentiation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd) -> this link needs to be changed after re-knit
 * [Differential Expression]()
 * [Differential Methylation]()
-* [Weighted Correlation Network](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/4_weighted_correlation_network/differential_coexpression_analysis_demonstration.md)
-* [Permutation Tests]()
+* [Differential Coexpression Analysis and Permutation Tests](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/4_weighted_correlation_network/differential_coexpression_analysis_demonstration.md)
 * [Network Visualization]()
