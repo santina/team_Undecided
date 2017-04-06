@@ -1,0 +1,173 @@
+---
+title: "Differential Coexpression Analysis Demonstration"
+author: "Eric Chu"
+date: '2017-04-05'
+output: github_document
+---
+
+In this markdown document, I showcase the differential coexpression analysis. I will show the intermediate data produced as well as the final plots, some of which were included in our poster. 
+
+This markdown file sources two scripts that contain the actual code for the computation - [Differential Coexpression Analysis](https://www.google.ca) and [Differential Coexpression Follow-Up Analysis](https://www.google.ca). In particular, the follow up analysis script provides an interface for interacting with the data. Please refer to those individual script files if you would like to know those details. No computation is done in this markdown file. This is only for showcasing our process. 
+
+## Differential Coexpression Analysis
+
+The following script has been set up to run the differential correlation on twenty genes as an example. The call to source the script is commented out as the results have been written to [this directory]()
+
+The result of the sourced script contain objects: networkMatrices, diffCorrelations, nullDiffCorrelations, and pValueMatrices. We wrote another script which provides an interface to interact with these data. See details below. 
+
+```{r load in data and interface}
+
+# imports
+library(tidyverse)
+library(dplyr)
+library(pheatmap)
+
+projectDirPath <- "/Users/ericchu/ws/team_Undecided/"
+
+# source(paste0(projectDirPath, "src/4_weighted_correlation_network/differential_correlation.r")) 
+
+# source the follow up analysis script in order to interact with the data produced by differential_correlation
+source(paste0(projectDirPath, "src/4_weighted_correlation_network/diff_followup_analysis.r"))
+
+```
+
+### networkMatrices
+
+The networkMatrices object contains the coexpression networks built from the 3 groups of samples that we have. 
+
+```{r networkMatrices}
+
+# show a subset
+networkMatrices$control[1:3, 1:3]
+
+# to visualize this better, see a heatmap constructed for the control group's coexpression matrix
+pheatmap(networkMatrices$control)
+
+```
+
+### diffCorrelations
+
+Next, we have the diffCorrelations object. This object contains the absolute difference taken from pairwise comparison of any two groups. In our case, there is a differential coexpression matrix for each of the following comparisons: control-th2high, control-th2low, th2high-th2low. 
+
+These matrices constitute our "observations" of coexpression changes. 
+
+```{r diffCorrelations}
+
+diffCorrelations$control.th2high[1:3, 1:3]
+
+# again, we can plot a matrix for it for visualization
+# here, we plot the absolute differential coexpression matrix control-th2high comparison
+# note that the numbers are much higher than expected, this is beause the differential methylation weights have already been applied. This allows us to take differential methylation values into account. 
+pheatmap(diffCorrelations$control.th2high)
+
+```
+
+### nullDiffCorrelations
+
+In order to test for significance in the differentail coexpression analysis, we did a permutation test. This permutation test was done by randomly permuting the samples in the two group and then constructing and subtracting the resulting coexpression matrices. This process was repeated 1000 times to produce 1000 permutation values for each pair of genes. These 1000 values are then treated as the null distribution (the distribution produced by random chance). This allows us to estimate a p-value for each pair of genes. See [Differential Coexpression Analysis](https://www.google.ca) for the actual computation. 
+
+```{r nullDiffCorrelations}
+
+# here we show 5 permutations for each gene pair (only a subset)
+nullDiffCorrelations$control.th2high[1:5, 1:3]
+
+```
+
+### pValueMatrices
+
+Finally, the pValuesMatrices object contains the p-values estimated for every gene pair in every group comparison from the permutation tests. 
+
+```{r pValueMatrices}
+
+pValueMatrices$control.th2high[1:3, 1:3]
+
+# we can also visualize this in a heatmap (for control-th2high)
+pheatmap(pValueMatrices$control.th2high)
+
+```
+
+## Follow up analysis; pretty plots!
+
+Next I show some possible follow analysis that can be done on the resulting data from differential coexpression analysis. Some of these plots were included in our poster!
+
+### P-value distributions!
+
+The peak on the left shows the existence of a signal :D. This is only a toy example with 20 genes though. Our real analysis had 571 genes which had a much convincing plot. Please refer to our [poster](google.ca). 
+
+```{r pvalue distributions}
+
+# first lets look at the data produced; first 20
+controlHighResults <- getDiffCorResults("control.th2high")
+controlHighResults %>% head(20)
+
+# visualizations
+plotPValueDistribution("control.th2high")
+plotPValueDistribution("control.th2low")
+plotPValueDistribution("th2high.th2low")
+
+```
+
+### Permutation distributions for specific gene pairs
+
+Permutation tests were done to estimate p-value for each gene pair. The "null distribution" constructed by permutation can also be visualized. Here I show a few of those plots. 
+
+First, lets look at the significant gene pairs.  
+
+```{r significant permutation distributions}
+
+# lets look at the permutation distribution for the first gene on the list
+(firstSigGene <- controlHighResults$gene_pair[1])
+
+# none of the permuted values were more extreme than the observed value, therefore a p-value of 0
+plotPermDistribution("control.th2high", firstSigGene)
+
+# second gene
+(secondSigGene <- controlHighResults$gene_pair[2])
+plotPermDistribution("control.th2high", secondSigGene)
+
+```
+
+Next, lets look at something that's not so significant
+
+
+```{r insigificant permutation distributions}
+
+# less significant genes
+(firstInsigGene <- (controlHighResults %>% arrange(desc(p_value)))$gene_pair[5])
+plotPermDistribution("control.th2high", firstInsigGene)
+
+# one more
+(secondInsigGene <- (controlHighResults %>% arrange(desc(p_value)))$gene_pair[10])
+plotPermDistribution("control.th2high", secondInsigGene)
+
+```
+
+### Coexpressions between the two groups
+
+Another cool plot we have is the expression correlation plots! We can visualize the differences between the two groups by plotting 2 different lines :D
+
+Let's try plotting the expression correlations between genes that had significant differential coexpression. (same gene pairs from before)
+
+```{r significant gene expression correlations}
+
+plotExpressionCorrelations("control.th2high", firstSigGene)
+
+plotExpressionCorrelations("control.th2high", secondSigGene)
+
+```
+
+And.. insigificant gene pairs!
+
+```{r insigificant gene expression correlations}
+
+plotExpressionCorrelations("control.th2high", firstInsigGene)
+
+plotExpressionCorrelations("control.th2high", secondInsigGene)
+
+```
+
+Lastly, keep in mind that what's presented here is only a toy example with 20 genes. Our full analysis has 1000 genes. Please refer to our results for the proper details. We only put together this markdown document for the purpose of demonstrating our differential coexpression analyss. 
+
+Thanks for reading!! :)
+
+
