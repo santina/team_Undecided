@@ -1,10 +1,11 @@
 # Pipeline and Source Code
 
-This folder contains the pipeline for our project, in the form of .rmd files containing our source code.  Below, we provide the links to our different stages, for quick access.  Note that each .rmd file contains both link to the previous stage, as well as a link to the next.
+This folder contains the pipeline for our project, in the form of .Rmd containing our source code (.md also included, in case you wanted to see outputs).  Below, we provide the links to our different stages, for quick access.  Note that each file contains both links to the previous stage, as well as a link to the next.
 
-* [Data Inspection](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspection%26qc/Quality_Control_RNAseq_Methylation.md)
-* [K-means Clustering for Patient Differentiation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd) -> this link needs to be changed after re-knit
-* [Differential Expression]()
-* [Differential Methylation]()
-* [Differential Coexpression Analysis and Permutation Tests](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/4_weighted_correlation_network/differential_coexpression_analysis_demonstration.md)
-* [Network Visualization]()
+* **Data Inspection:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md)
+* **K-means Clustering for Patient Differentiation:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.md)
+* **Differential Expression:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/3_differential_expression/DE_ThreeGroup.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/3_differential_expression/DE_ThreeGroup.md)
+* **Differential Methylation:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md)
+* **Differential Coexpression Analysis and Permutation Tests:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.md)
+* **Network Visualization:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/6_network_visualization/networkFilter.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/6_network_visualization/networkFilter.md)
+* **Pathway Enrichment:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/7_pathway_enrichment/PathwayEnrichment.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/7_pathway_enrichment/PathwayEnrichment.md)
