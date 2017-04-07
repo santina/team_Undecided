@@ -43,10 +43,10 @@ library(pheatmap)
 
 projectDirPath <- "/Users/ericchu/ws/team_Undecided/"
 
-# source(paste0(projectDirPath, "src/4_weighted_correlation_network/differential_correlation.r")) 
+# source(paste0(projectDirPath, "src/5_weighted_corr_net_&_diff_analysis/differential_correlation.r")) 
 
 # source the follow up analysis script in order to interact with the data produced by differential_correlation
-source(paste0(projectDirPath, "src/4_weighted_correlation_network/diff_followup_analysis.r"))
+source(paste0(projectDirPath, "src/5_weighted_corr_net_&_diff_analysis/diff_followup_analysis.r"))
 ```
 
     ## 

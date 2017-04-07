@@ -7,7 +7,7 @@ output: github_document
 
 In this markdown document, I showcase the differential coexpression analysis. I will show the intermediate data produced as well as the final plots, some of which were included in our poster. 
 
-This markdown file sources two scripts that contain the actual code for the computation - [Differential Coexpression Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/4_weighted_correlation_network/differential_correlation.r) and [Differential Coexpression Follow-Up Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/4_weighted_correlation_network/diff_followup_analysis.r). In particular, the follow up analysis script provides an interface for interacting with the data. Please refer to those individual script files if you would like to know those details. No computation is done in this markdown file. This is only for showcasing our process. 
+This markdown file sources two scripts that contain the actual code for the computation - [Differential Coexpression Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_&_diff_analysis/differential_correlation.r) and [Differential Coexpression Follow-Up Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_&_diff_analysis/diff_followup_analysis.r). In particular, the follow up analysis script provides an interface for interacting with the data. Please refer to those individual script files if you would like to know those details. No computation is done in this markdown file. This is only for showcasing our process. 
 
 ## Differential Coexpression Analysis
 
@@ -24,10 +24,10 @@ library(pheatmap)
 
 projectDirPath <- "/Users/ericchu/ws/team_Undecided/"
 
-# source(paste0(projectDirPath, "src/4_weighted_correlation_network/differential_correlation.r")) 
+# source(paste0(projectDirPath, "src/5_weighted_corr_net_&_diff_analysis/differential_correlation.r")) 
 
 # source the follow up analysis script in order to interact with the data produced by differential_correlation
-source(paste0(projectDirPath, "src/4_weighted_correlation_network/diff_followup_analysis.r"))
+source(paste0(projectDirPath, "src/5_weighted_corr_net_&_diff_analysis/diff_followup_analysis.r"))
 
 ```
 
@@ -64,7 +64,7 @@ pheatmap(diffCorrelations$control.th2high)
 
 ### nullDiffCorrelations
 
-In order to test for significance in the differentail coexpression analysis, we did a permutation test. This permutation test was done by randomly permuting the samples in the two group and then constructing and subtracting the resulting coexpression matrices. This process was repeated 1000 times to produce 1000 permutation values for each pair of genes. These 1000 values are then treated as the null distribution (the distribution produced by random chance). This allows us to estimate a p-value for each pair of genes. See [Differential Coexpression Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/4_weighted_correlation_network/differential_correlation.r) for the actual computation. 
+In order to test for significance in the differentail coexpression analysis, we did a permutation test. This permutation test was done by randomly permuting the samples in the two group and then constructing and subtracting the resulting coexpression matrices. This process was repeated 1000 times to produce 1000 permutation values for each pair of genes. These 1000 values are then treated as the null distribution (the distribution produced by random chance). This allows us to estimate a p-value for each pair of genes. See [Differential Coexpression Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_&_diff_analysis/differential_correlation.r) for the actual computation. 
 
 ```{r nullDiffCorrelations}
 
