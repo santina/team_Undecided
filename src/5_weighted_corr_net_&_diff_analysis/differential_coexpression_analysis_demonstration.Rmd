@@ -111,6 +111,8 @@ plotPValueDistribution("th2high.th2low")
 
 ```
 
+At this point, we have more than enough information to move onto the next stage in our pipeline, [network visualization](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/6_network_visualization/networkFilter.Rmd), which starts by processing the gene pair lists produced in this step (in the non-toy example, there were three, corresponding to control vs high, control vs low, and high vs low) into something usable for Cytoscape.  We'll return to this code to plot specific gene pairs, once Cytoscape has told us which gene pairs are the most interesting to look at!  
+
 ### Permutation distributions for specific gene pairs
 
 Permutation tests were done to estimate p-value for each gene pair. The "null distribution" constructed by permutation can also be visualized. Here I show a few of those plots. 
@@ -144,7 +146,6 @@ plotPermDistribution("control.th2high", firstInsigGene)
 plotPermDistribution("control.th2high", secondInsigGene)
 
 ```
-At this point, we have more than enough information to move onto the next stage in our pipeline, [network visualization](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/6_network_visualization/networkFilter.Rmd), which starts by processing the gene pair lists produced in this step (in the non-toy example, there were three, corresponding to control vs high, control vs low, and high vs low) into something usable for Cytoscape.  We'll return to this code to plot specific gene pairs, once Cytoscape has told us which gene pairs are the most interesting to look at!  
 
 ### Coexpressions between the two groups
 
