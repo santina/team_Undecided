@@ -5,10 +5,12 @@ In this file, we walk through our results, as well as the main analyses conducte
 ![pipeline](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/teamUndecided_Pipeline.png "Pipeline")
 We'll also give a link to the source code (which is actually the .md file), and general description of the inputs and outputs of each section.  
 
+As a general introduction to the data, we have two main datasets, both downloaded off GEO with accession number [GSE85568](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE85568).  They are both stored in the raw_data subfolder.  The first one consists of normalized RNA-seq counts (though we didn't manage to find exactly what steps they performed), which is 16,535 gene entries by 85 patients (57 asthmatics, 28 controls).  There were 71 asthmatics and 41 controls in the original, but only 85 patients have both RNA-seq and methylation data available.  Therefore, the methylation dataset was 327,271 probes by 85 patients, and had also undergone some correction by the original authors.  
+
 ## 0. Data Inspection
 [Source code](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md)  
 *Input*: the normalized RNA-seq counts and methylation data, as downloaded from GEO.  
-*Output*: none, as we deemed that no correction was necessary.  
+*Output*: none, as we deemed that no further correction was necessary.  
 To begin, we conducted exploratory analysis of both the RNA-seq and methylation data to check if further cleaning or correction was necessary.
 Namely, we performed PCA using limma of the RNA-seq data with respect to the various covariates, to see if they cluster, and obtained some figures demonstrating the p-values associated between the covariates and the PCs.  
 
@@ -17,7 +19,7 @@ Namely, we performed PCA using limma of the RNA-seq data with respect to the var
 
 Looking at the first figure, we can see that certain PCs do correlate with East Asian ethnicity and smoking status in the RNA-seq data, but because PCs 16, 36, and 81 explain little variance, we decided that additional batch correction was unnecessary.  In the other figure, we see that significant PCs do correlate with gender, age, and ethnicity.  To deal with this, these variables will be controlled for when we perform differential methylation analysis.   
 
-As we have a very large number of probes for the methylation data (over 350,000), we filtered out some probes found to be non-differentially methylated in most cells.  This removed around 40,000 probes, shrinking our dataset.  
+As we have a very large number of probes for the methylation data (around 320,000), we filtered out some probes found to be non-differentially methylated in most cells.  This removed around 40,000 probes, shrinking our dataset.  
 
 ## 1. K-Means Clustering for Patient Differentiation
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.md)  
@@ -40,7 +42,7 @@ After, we performed differential expression analysis with the RNA-seq data using
 *Input*: the cleaned methylation data from post-data inspection; the clusters associated with each patient from the previous step.  
 *Output*: three lists (corresponding to control vs high, control vs low, and high vs low) of weights associated with each gene, depending on how differentially methylated they are between groups (the more, the stronger the weight).  
 
-We then mapped each probe to their gene loci, to obtain the methylation count associated with each gene for each patient.  We then performed differential methylation analysis using edgeR to obtain "weights" by taking -log2(FDR) associated with each gene for each comparison.  
+We then mapped each probe to their gene loci, to obtain the methylation count associated with each gene for each patient.  We then performed differential methylation analysis using edgeR to obtain "weights" by taking -log2(FDR) associated with each gene for each comparison.  We also saw here that more differentially methylated CpGs were found when comparing asthmatics to controls then between asthma subtypes, as the "weights" in the Th2-high to Th2-low comparison tend to be low (all weights < 3), compared to the Th2-high to control comparison, with two weights > 30, or even the Th2-low to control comparison, with several weights > 13.  This indicates a shared methylation profile among asthmatics, regardless of subtype.  
 
 ## 4. Correlation Network Generation and Differential Network Analysis with Permutation Testing
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.md) (though this a toy example)  
@@ -66,7 +68,7 @@ The outputted lists were then sent to the next stage for visualization.
 *Input*: the three gene pair lists, with edge weights.  
 *Output*: A meta-network used for visualizing significant gene pairs, and plots of how the expression of various significant gene pairs differs.  
 
-After processing the inputs, we put them into Cytoscape for visualization.  We show some of our figures below.  
+After processing the inputs and filtering out enough genes so that they can actually be visualized (using FDR = 0 and in the top 500 edge weights for each group), we put them into Cytoscape.  We show some of our figures below.  
 ### Control vs. Th2-High
 ![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/ctlVshigh_cytoscape_subnetwork_CLU.png "Control vs High")
 ### Control vs. Th2-Low
@@ -74,8 +76,18 @@ After processing the inputs, we put them into Cytoscape for visualization.  We s
 ### Th2-High vs. Th2-Low
 ![highvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/lowVsHigh_cytoscape_subnetwork.png "High vs Low")  
 
-Here, the size of the node corresponds to the degree (number of edges it has), while the thickness of the edge corresponds to its weight.  
+Here, the size of the node corresponds to the degree (number of edges it has), while the thickness of the edge corresponds to its weight.  Red mean that the particular edge is in the top 20% of edges, when ordered by weight.  Like this, we can see that some genes are more highly connected than anothers, which could suggest that some could be important players in asthma-related pathways.  One such gene that appeared as well-connected with high-weight edges (meaning high differential co-expression and/orl co-methylation) in the control vs. Th2-high comparison network was CLU, or clusterin, which has been implicated in other literature as an asthma-related biomarker.  Using similar requirements (genes with a decent number of higher-weight edges), we picked a couple of genes we deemed interesting to probe further into.  
+
+We then looked at permutation distributions for these genes.  For instance, below we have
+### Control vs. Th2-High: CLU vs. USP54 distribution
+![cluvusp54](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure4_distribution_control_high_clu_usp54.png "CLU vs USP54")
+### Control vs. Th2-Low: PACSIN vs. SPATS distribution
+![pacsinvspats](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure6_distribution_control_low_pacsin1_spats2.png "PACSIN vs SPATS")
+### Th2-High vs Th2-Low: GPSM3 vs. CLU distribution
+![gpsm3vclu](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure8_distribution_high_low_gpsm3_clu.png "GPSM3 vs CLU")
+
+
 ## 6. Pathway Enrichment
-[Source Code]()  
+[Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/7_pathway_enrichment/PathwayEnrichment.md)  
 *Input*: the three gene pair lists, with edge weights.  
 *Output*: list of significant pathways, obtained by running our genes through KEGG.  
