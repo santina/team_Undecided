@@ -49,8 +49,11 @@ We then mapped each probe to their gene loci, to obtain the methylation count as
 
 First, we construct three coexpression matrices for the three groups (control, high, low).  Then we calculate the differential correlations between them by taking the absolute difference of each pairwise comparison between any two groups, representing our observations of the coexpression changes when you move from one group to another (this took around 30 hours to run).  To try and increase confidence in our significant observations being actually significant, we also performed permutation tests (using 1000 iterations).  The result of this was that some gene pairs were noted to have an FDR or p-value of 0, as those pairs were always more significant than ones produced by random draw.  The p-values of each gene-pair was stored; below, we have the p-value distributions associated with each comparison (control vs high, control vs low, and high vs low).
 
+### Control vs. Th2-High
 ![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure1_control_high.png "Control vs High")
+### Control vs Th2-Low
 ![controlvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure2_control_low.png "Control vs Low")
+### Th2-High vs Th2-Low
 ![highvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure3_high_low.png "High vs Low")  
 
 We can see from these figures that the difference between the co-expression profiles of Th2-high and control is much larger than that of Th2-high and low, or Th2-low and control.  This is understandable, because asthma patients should share similar profiles regardless of subtype, and we know from published literature that the expression profiles of Th2-low asthma patients are closer to control than Th2-high are to controls.  
