@@ -1,18 +1,63 @@
----
-title: "Network Filtering"
-author: "Allison Tai"
-date: "4/3/2017"
-output: 
-  html_document: 
-    keep_md: yes
----
+# Network Filtering
+Allison Tai  
+4/3/2017  
 We have just come from Eric's [stage](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.md) where he performed differential coexpression analysis.  
 
 The goal of this document is to transform the gene list pairs from that previous stage into a file that is usable by Cytoscape for visualization.  
 
 First, we load our data, the gene list pairs from the control/Th2-high network, control/Th2-low network, and Th2-high/Th2network (all from the differential coexpression analysis performed by Eric).
-```{r}
+
+```r
 library(tidyverse)
+```
+
+```
+## Warning: package 'tidyverse' was built under R version 3.2.5
+```
+
+```
+## Loading tidyverse: ggplot2
+## Loading tidyverse: tibble
+## Loading tidyverse: tidyr
+## Loading tidyverse: readr
+## Loading tidyverse: purrr
+## Loading tidyverse: dplyr
+```
+
+```
+## Warning: package 'ggplot2' was built under R version 3.2.5
+```
+
+```
+## Warning: package 'tibble' was built under R version 3.2.5
+```
+
+```
+## Warning: package 'tidyr' was built under R version 3.2.5
+```
+
+```
+## Warning: package 'readr' was built under R version 3.2.5
+```
+
+```
+## Warning: package 'purrr' was built under R version 3.2.5
+```
+
+```
+## Warning: package 'dplyr' was built under R version 3.2.5
+```
+
+```
+## Conflicts with tidy packages ----------------------------------------------
+```
+
+```
+## filter(): dplyr, stats
+## lag():    dplyr, stats
+```
+
+```r
 library('biomaRt')
 
 conHigh <- readRDS("../../data/processed_data/controlHighResults.rds")
@@ -21,7 +66,8 @@ highLow <- readRDS("../../data/processed_data/highLowResults.rds")
 ```
 
 Now, let's split the gene pairs into separate columns, and map the ensembl ids to entrezgene names.  We'll also filter the genes using FDR == 0, then sort by edge weight, before taking only the top 500 entries.  This is for easier viewing in Cytoscape, to avoid having too many genes clog up the area.  The filters will probably be adjusted in the future, as they are very *ad hoc*.
-```{r}
+
+```r
 mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
 
 # replace gene names with a function
