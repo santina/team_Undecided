@@ -199,4 +199,5 @@ We also looked at pathway differences between the control vs. high enrichment an
     ## [27] "Rheumatoid arthritis"
 
 This brings up an glance of some pathways that may be potentially differentially regulated in one comparison, but not the other.  We again see pathways that are promising in regards to asthma (being related to inflammation and immune response), such as the TGF-beta signalling pathway, the TNF signalling pathway, bacterial invasion of epithelial cells, and inflammatory mediator regulation of TRP channels.  If we can improve our filtering as described in previous steps, this type of analysis would be worth further exploration.  
+  
 We have some misgiving about this, however, as referenced in the source: we are no longer looking at gene pairs in this analysis, which breaks our theme a little.
