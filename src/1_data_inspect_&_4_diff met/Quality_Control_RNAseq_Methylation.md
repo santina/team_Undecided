@@ -11,7 +11,7 @@ The normalized count table has been downloaded from the GEO repository. The meth
 This is an initial look at how control and asthma patients cluster, and how confounders affect patient groupings. 
 
 ``` r
-setwd("/Users/emmagraham/Desktop/Masters/STAT540/TeamUndecided/Emma")
+setwd("../../")
 library(GEOquery)
 ```
 
@@ -287,7 +287,7 @@ Cleaning methylation data
 =========================
 
 ``` r
-setwd("/Users/emmagraham/Desktop/Masters/STAT540/TeamUndecided/Emma")
+setwd("../../src/1_data_inspect_&_4_diff met")
 
 #Get methylation data
 library(stringr)

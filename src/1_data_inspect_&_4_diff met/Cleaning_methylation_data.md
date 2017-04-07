@@ -34,7 +34,7 @@ library(RCurl)
 library(lumi)
 library(limma)
 library(biomaRt)
-setwd("~/Desktop/Masters/STAT540/Team_Undecided")
+setwd("../../")
 rna_data <- read.table(file = "data/raw_Data/GSE85567_RNASeq_normalizedcounts.txt", 
                                              header = TRUE,
                                              row.names = 1, 
@@ -388,7 +388,7 @@ Th2lowvscontrolRESULTS <- FilterListandDefineWeight(big_annotated_sigCtlvsTh2low
 
 Th2lowvshighRESULTS <- FilterListandDefineWeight(big_annotated_sigth2highvslow)
 
-setwd("/Users/emmagraham/Desktop/Masters/STAT540/Team_Undecided")
+setwd("../../")
 write.table(Th2highvscontrolRESULTS, file = "data/processed_data/network_weights/meth_CtlvsTh2high_ensemblID_weights.txt", row.names = FALSE, quote = FALSE, sep = ",", col.names = TRUE)
 
 write.table(Th2lowvscontrolRESULTS, file = "data/processed_data/network_weights/meth_CtlvsTh2low_ensemblID_weights.txt", row.names = FALSE, quote = FALSE, sep = ",", col.names = TRUE)
