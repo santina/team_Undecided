@@ -2,10 +2,9 @@
 title: "K-means clustering"
 author: "Allison Tai"
 date: "March 15, 2017"
-output: 
-  html_document: 
-    keep_md: yes
+output: github_document
 ---
+[Previously](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd), we performed data inspection to check if further correction of RNA-seq data was needed, and some cleaning of the methylation data.  
 
 First, we load all the packages we want to use.
 ```{r, message=FALSE, warning=FALSE}
@@ -178,3 +177,5 @@ detach(asthma)
 ```
   
 We can now see the two clusters much more clearly, and their division appears much more distinct as well.
+
+Now that all our asthma patients have been assigned to their appropriate clusters, we can move to the next stage, [differential expression analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/3_differential_expression/DE_ThreeGroup.Rmd).

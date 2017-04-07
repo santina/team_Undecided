@@ -3,6 +3,9 @@ Differential Expression 3 Group
 Arjun Baghela
 3/29/2017
 
+Our last step was [k-means clustering](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.md), where we assigned each asthma patient to a group (Th2-high or Th2-low) depending on their expression in three genes.
+
+In this document, we will perform differential expression analysis of the RNA-seq data between the three groups (control vs high, control vs low, and high vs low). The resulting three lists will be combined, and we'll filter out about 500 genes (deemed "interesting"), which will be passed to the next stage for constructing the correlation network and performing differential expression analysis.
 Load the necessary packages.
 
 ``` r
@@ -43,7 +46,7 @@ library(magrittr)
     ## 
     ##     extract
 
-Load in the data.
+Load in the normalized RNA-seq count data.
 
 ``` r
 countdata <- read.table(file= "../../data/raw_data/rna_seq_data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
@@ -106,6 +109,8 @@ remove <- c("ENSG00000016490", "ENSG00000197632", "ENSG00000133110") # Remove th
 countdata <- countdata[!(rownames(countdata) %in% remove),]
 ```
 
+We'll process the data some more.
+
 ``` r
 DGElist <- DGEList(counts= countdata, group= metadata$cluster) # create DGEList to store data in
 DGElist$samples$lib.size %>% min() # Find lib size
@@ -131,6 +136,8 @@ DGElistFilt$counts %>% nrow()
 ``` r
 DGElistFiltNorm<- calcNormFactors(DGElistFilt) # calculate Norm factors
 ```
+
+Now, let's perform the differential expression analysis, using edgeR.
 
 ``` r
 design <- model.matrix(~0+group, data=DGElistFiltNorm$samples) #Create model matrix
@@ -167,6 +174,8 @@ union %>% length() # List is 571 genes to do differential co-expression analysis
 ``` r
 write.table(union, "../../data/processed_data/DEGene_ForDiffCoexpAnalysis.txt") # Write it to a table. 
 ```
+
+Now, we can move onto the next stage, [differential methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md#rna-seq-confirming-that-pcs-do-not-correlate-with-covariates), which is necessary for weighting the correlation network we'll generate later.
 
 ##### DONT LOOK AT THIS.
 

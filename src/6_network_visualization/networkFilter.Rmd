@@ -2,11 +2,9 @@
 title: "Network Filtering"
 author: "Allison Tai"
 date: "4/3/2017"
-output: 
-  html_document: 
-    keep_md: yes
+output: github_document
 ---
-We have just come from Eric's [stage](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.md) where he performed differential coexpression analysis.  
+We have just come from Eric's [stage](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.Rmd) where he performed differential coexpression analysis.  
 
 The goal of this document is to transform the gene list pairs from that previous stage into a file that is usable by Cytoscape for visualization.  
 

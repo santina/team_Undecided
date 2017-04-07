@@ -1,45 +1,46 @@
-# K-means clustering
-Allison Tai  
-March 15, 2017  
+K-means clustering
+================
+Allison Tai
+March 15, 2017
+
+[Previously](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md), we performed data inspection to check if further correction of RNA-seq data was needed, and some cleaning of the methylation data.
 
 First, we load all the packages we want to use.
 
-```r
+``` r
 library(tidyverse)
 library(WGCNA)
 ```
 
-```
-## ==========================================================================
-## *
-## *  Package WGCNA 1.51 loaded.
-## *
-## *    Important note: It appears that your system supports multi-threading,
-## *    but it is not enabled within WGCNA in R. 
-## *    To allow multi-threading within WGCNA with all available cores, use 
-## *
-## *          allowWGCNAThreads()
-## *
-## *    within R. Use disableWGCNAThreads() to disable threading if necessary.
-## *    Alternatively, set the following environment variable on your system:
-## *
-## *          ALLOW_WGCNA_THREADS=<number_of_processors>
-## *
-## *    for example 
-## *
-## *          ALLOW_WGCNA_THREADS=4
-## *
-## *    To set the environment variable in linux bash shell, type 
-## *
-## *           export ALLOW_WGCNA_THREADS=4
-## *
-## *     before running R. Other operating systems or shells will
-## *     have a similar command to achieve the same aim.
-## *
-## ==========================================================================
-```
+    ## ==========================================================================
+    ## *
+    ## *  Package WGCNA 1.51 loaded.
+    ## *
+    ## *    Important note: It appears that your system supports multi-threading,
+    ## *    but it is not enabled within WGCNA in R. 
+    ## *    To allow multi-threading within WGCNA with all available cores, use 
+    ## *
+    ## *          allowWGCNAThreads()
+    ## *
+    ## *    within R. Use disableWGCNAThreads() to disable threading if necessary.
+    ## *    Alternatively, set the following environment variable on your system:
+    ## *
+    ## *          ALLOW_WGCNA_THREADS=<number_of_processors>
+    ## *
+    ## *    for example 
+    ## *
+    ## *          ALLOW_WGCNA_THREADS=4
+    ## *
+    ## *    To set the environment variable in linux bash shell, type 
+    ## *
+    ## *           export ALLOW_WGCNA_THREADS=4
+    ## *
+    ## *     before running R. Other operating systems or shells will
+    ## *     have a similar command to achieve the same aim.
+    ## *
+    ## ==========================================================================
 
-```r
+``` r
 library(magrittr)
 library(scatterplot3d)
 library(biomaRt)
@@ -48,7 +49,7 @@ options(stringsAsFactors = FALSE)
 
 Now, we can load our data, the normalized RNA-seq read count data.
 
-```r
+``` r
 countdata <- read.table(file= "../../data/raw_data/rna_seq_data/GSE85567_RNASeq_normalizedcounts.txt", check.names = FALSE)
 metadata <- read.csv(file= "../../data/raw_data/rna_seq_data/GSE85566_metadata.txt", row.names = 1)
 
@@ -56,57 +57,53 @@ metadata %<>% filter(ID %in% colnames(countdata))
 metadata %>% group_by(Status) %>% tally()
 ```
 
-```
-## # A tibble: 2 × 2
-##    Status     n
-##     <chr> <int>
-## 1  Asthma    57
-## 2 Control    28
-```
+    ## # A tibble: 2 × 2
+    ##    Status     n
+    ##     <chr> <int>
+    ## 1  Asthma    57
+    ## 2 Control    28
 
-```r
+``` r
 colnames(countdata) == metadata$ID
 ```
 
-```
-##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [12] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [23] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [34] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [45] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [56] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [67] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-## [78] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
-```
+    ##  [1] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [12] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [23] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [34] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [45] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [56] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [67] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
+    ## [78] FALSE FALSE FALSE FALSE FALSE FALSE FALSE FALSE
 
-```r
+``` r
 countdata <- countdata[,metadata$ID]
 colnames(countdata) == metadata$ID
 ```
 
-```
-##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [15] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [29] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [43] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [57] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [71] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-## [85] TRUE
-```
-Extract the three relevant genes we wish to cluster on: CLCA1, serpinB2, and periostin, which multiple literature have used to distinguish between asthma endotypes, depending on whether the expression of the three are high (Th2-high) or low (Th2-low).  
+    ##  [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+    ## [15] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+    ## [29] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+    ## [43] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+    ## [57] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+    ## [71] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+    ## [85] TRUE
 
-```r
+Extract the three relevant genes we wish to cluster on: CLCA1, serpinB2, and periostin, which multiple literature have used to distinguish between asthma endotypes, depending on whether the expression of the three are high (Th2-high) or low (Th2-low).
+
+``` r
 mart <- useDataset("hsapiens_gene_ensembl", useMart("ensembl"))
 # time to grab the gene names to find our three genes
 genes <- rownames(countdata)
 geneList <- getBM(filters= "ensembl_gene_id", attributes= c("ensembl_gene_id",
 "entrezgene", "description"),values=genes,mart= mart)
 ```
-From looking through our list of genes, it looks like CLCA1 = ENSG00000016490, serpinB2 = ENSG00000197632, and periostin = ENSG00000133110.  
+
+From looking through our list of genes, it looks like CLCA1 = ENSG00000016490, serpinB2 = ENSG00000197632, and periostin = ENSG00000133110.
 
 So, let's grab those rows, then fix up our data to get rid of biases, etc.
 
-```r
+``` r
 # grab those rows
 trundata <- countdata[c("ENSG00000016490", "ENSG00000197632", "ENSG00000133110"),]
 
@@ -115,20 +112,16 @@ tcount <- as.data.frame(t(countdata))
 gsg <- goodSamplesGenes(tcount, verbose = 1)
 ```
 
-```
-##  Flagging genes and samples with too many missing values...
-##   ..step 1
-```
+    ##  Flagging genes and samples with too many missing values...
+    ##   ..step 1
 
-```r
+``` r
 gsg$allOK # All are good. If not, will be False and we would have to filter them
 ```
 
-```
-## [1] TRUE
-```
+    ## [1] TRUE
 
-```r
+``` r
 # now work with our genes, take the log2 of count to prevent high count patients from skewing the clustering
 ttrun <- as.data.frame(t(trundata))
 ttrun <- log2(ttrun)
@@ -142,7 +135,7 @@ ttrunSC <- data.frame(scale(ttrun))
 
 Let's also take a look at how the expression profile of these three genes differ between asthma and control patients, as a check by drawing a 3D-plot.
 
-```r
+``` r
 # load packages needed for plotting
 library(scatterplot3d)
 
@@ -160,17 +153,17 @@ legend("topleft", inset=.05,      # location and inset
     c("asthma", "control"), fill=c("red", "blue"))
 ```
 
-![](Cluster_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](Cluster_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
-```r
+``` r
 detach(ttrunSC)
 ```
-  
-It looks like there are some asthma patients with higher expression in the three genes, and some with lower expression in the three genes (f), which have a similar expression profile to the control group.  This is not too surprising, as we know that the expression profiles of Th2-low asthma patients are more similar to controls than Th2-high asthma are too controls.  It's promising, because this  preliminary suggests this group of patients can be successively divided into separate endotypes.  
+
+It looks like there are some asthma patients with higher expression in the three genes, and some with lower expression in the three genes (f), which have a similar expression profile to the control group. This is not too surprising, as we know that the expression profiles of Th2-low asthma patients are more similar to controls than Th2-high asthma are too controls. It's promising, because this preliminary suggests this group of patients can be successively divided into separate endotypes.
 
 With this, we can cluster our asthma patients, to actually get defined groups each patient belongs to.
 
-```r
+``` r
 # separate asthmatics and control into two matrices using our added column
 matrixList <- split(ttrunSC, metadata$Status)
 
@@ -197,30 +190,24 @@ write.table(asthma, file = "asthma.tsv")
 write.table(control, file = "control.tsv")
 ```
 
-Now let's draw some graphs and look at our clusters, using multiple 2D-scatterplots.  
+Now let's draw some graphs and look at our clusters, using multiple 2D-scatterplots.
 
-```r
+``` r
 # reload packages needed for plotting, just in case
 library(ggplot2)
 library(gridExtra)
 ```
 
-```
-## Warning: package 'gridExtra' was built under R version 3.2.5
-```
+    ## Warning: package 'gridExtra' was built under R version 3.2.5
 
-```
-## 
-## Attaching package: 'gridExtra'
-```
+    ## 
+    ## Attaching package: 'gridExtra'
 
-```
-## The following object is masked from 'package:dplyr':
-## 
-##     combine
-```
+    ## The following object is masked from 'package:dplyr':
+    ## 
+    ##     combine
 
-```r
+``` r
 library(scatterplot3d)
 
 # we're not going to re-generate our k-means clusters anymore, so run starting from here:
@@ -254,19 +241,19 @@ p3 <- ggplot(asthma, aes(SerpinB2, Periostin, color = geneCluster$cluster)) + ge
 grid.arrange(p1, p2, p3, nrow = 3)
 ```
 
-![](Cluster_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
+![](Cluster_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
-```r
+``` r
 # save the image
 # g <- arrangeGrob(p1, p2, p3, nrow=3) #generates g
 # ggsave(file="k_means.png", g) #saves g
 ```
-  
-For this particular iteration of k-means, we get 28 patients in the first cluster, characterized by higher expression in the three genes, and 29 patients in the second, characterized by lower expression in the same genes.  We declared the first cluster Th2-high, and the second Th2-low, following previously published literature.  
-  
+
+For this particular iteration of k-means, we get 28 patients in the first cluster, characterized by higher expression in the three genes, and 29 patients in the second, characterized by lower expression in the same genes. We declared the first cluster Th2-high, and the second Th2-low, following previously published literature.
+
 Now let's look at our clusters with a 3D scatterplot, for more clarity.
 
-```r
+``` r
 # set image resolution
 # png("3d.png", width = 7, height = 7, units = 'in', res = 300)
 attach(asthma)
@@ -284,12 +271,14 @@ legend("topleft", inset=.05,      # location and inset
 text(x = 5, y = -1.8, "SerpinB2", srt = 25)
 ```
 
-![](Cluster_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](Cluster_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
-```r
+``` r
 detach(asthma)
 # save plot
 # dev.off()
 ```
-  
+
 We can now see the two clusters much more clearly, and their division appears much more distinct as well.
+
+Now that all our asthma patients have been assigned to their appropriate clusters, we can move to the next stage, [differential expression analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/3_differential_expression/DE_ThreeGroup.md).
