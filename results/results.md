@@ -68,11 +68,11 @@ The outputted lists were then sent to the next stage for visualization.
 
 After processing the inputs, we put them into Cytoscape for visualization.  We show some of our figures below.  
 ### Control vs. Th2-High
-![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/ctlVshigh_cytoscape_subnetwork_CLU "Control vs High")
+![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/ctlVshigh_cytoscape_subnetwork_CLU.png "Control vs High")
 ### Control vs. Th2-Low
-![controlvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/ctlVsLow_cytoscape_subnetwork_PACSIN1 "Control vs Low")
+![controlvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/ctlVsLow_cytoscape_subnetwork_PACSIN1.png "Control vs Low")
 ### Th2-High vs. Th2-Low
-![highvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/lowVsHigh_cytoscape_subnetwork "High vs Low")  
+![highvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/lowVsHigh_cytoscape_subnetwork.png "High vs Low")  
 
 Here, the size of the node corresponds to the degree (number of edges it has), while the thickness of the edge corresponds to its weight.  
 ## 6. Pathway Enrichment
