@@ -85,9 +85,19 @@ We then looked at permutation distributions for these genes.  For instance, belo
 ![pacsinvspats](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure6_distribution_control_low_pacsin1_spats2.png "PACSIN vs SPATS")
 ### Th2-High vs Th2-Low: GPSM3 vs. CLU distribution
 ![gpsm3vclu](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure8_distribution_high_low_gpsm3_clu.png "GPSM3 vs CLU")
+For each of these, note how much higher the "absolute correlation with methylation weighting" are compared to the randomly drawn pairs.  In fact, for each of these, the original is higher than 100% of the random draws, therefore giving the pair a p-value of 0, and suggests that their significance wasn't by chance.  
 
+Now we can look at the co-expression plots for those same genes!
+### Control vs. Th2-High: CLU vs. USP54 co-expression
+![cluvusp54](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure5_expression_correlations_control_high_clu_usp54.png "CLU vs USP54")
+### Control vs. Th2-Low: PACSIN vs. SPATS co-expression
+![pacsinvspats](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure7_expression_correlations_control_low_pacsin1_spats2.png "PACSIN vs SPATS")
+### Th2-High vs Th2-Low: GPSM3 vs. CLU co-expression
+![gpsm3vclu](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure9_expression_corrleations_high_low_gpsm3_clu.png "GPSM3 vs CLU")  
+This gives a great picture of how the weighted differential expression of one gene changes with regards to the other gene.
 
 ## 6. Pathway Enrichment
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/7_pathway_enrichment/PathwayEnrichment.md)  
 *Input*: the three gene pair lists, with edge weights.  
 *Output*: list of significant pathways, obtained by running our genes through KEGG.  
+
