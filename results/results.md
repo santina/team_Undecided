@@ -93,7 +93,7 @@ Now we can look at the co-expression plots for those same genes!
 ### Control vs. Th2-Low: PACSIN vs. SPATS co-expression
 ![pacsinvspats](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure7_expression_correlations_control_low_pacsin1_spats2.png "PACSIN vs SPATS")
 ### Th2-High vs Th2-Low: GPSM3 vs. CLU co-expression
-![gpsm3vclu](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure9_expression_corrleations_high_low_gpsm3_clu.png "GPSM3 vs CLU")  
+![gpsm3vclu](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure9_expression_correlations_high_low_gpsm3_clu.png "GPSM3 vs CLU")  
 This gives a great picture of how the weighted differential expression of one gene changes with regards to the other gene.
 
 ## 6. Pathway Enrichment
