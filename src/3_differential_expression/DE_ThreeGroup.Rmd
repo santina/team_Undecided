@@ -73,7 +73,7 @@ union %>% length() # List is 571 genes to do differential co-expression analysis
 
 write.table(union, "../../data/processed_data/DEGene_ForDiffCoexpAnalysis.txt") # Write it to a table. 
 ```
-Now, we can move onto the next stage, [differential methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd#rna-seq-confirming-that-pcs-do-not-correlate-with-covariates), which is necessary for weighting the correlation network we'll generate later.  
+Now, we can move onto the next stage, [differential methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd#assessment-of-differentially-methylated-sites), which is necessary for weighting the correlation network we'll generate later.  
 
 
 
