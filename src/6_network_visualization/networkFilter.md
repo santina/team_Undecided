@@ -113,4 +113,4 @@ write.table(clMatrix, file = "clWeight.tsv", quote=FALSE, sep='\t', row.names = 
 write.table(hlMatrix, file = "hlWeight.tsv", quote=FALSE, sep='\t', row.names = FALSE)
 ```
 
-Now that everything's been created, we can head to Cytoscape for the actual visualization steps. If you'd like to see the things we did after Cytoscape (since there's no R code for that step), you can go to Eric's code on plotting interesting (or uninteresting) genes [here](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.Rmd#permutation-distributions-for-specific-gene-pairs).
+Now that everything's been created, we can head to Cytoscape for the actual visualization steps. If you'd like to see the things we did after Cytoscape (since there's no R code for that step), you can go to Eric's code on plotting interesting (or uninteresting) genes [here](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.md#permutation-distributions-for-specific-gene-pairs).
