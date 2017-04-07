@@ -162,7 +162,7 @@ heatmap.2(big_table,  Rowv = NA, Colv = NA, scale = NULL , trace="none",  dendro
           main = "RNASeq: Adjusted p-value of \nassociation between \ncovariate and PC" )
 ```
 
-Since these associations are mainly in either middling or late PCs, we will not adjust for them. However, it should be noted that this association was not reported in the manuscript! 
+Since these associations are mainly in either middling or late PCs, we will not adjust for them. However, it should be noted that this association was not reported in the manuscript!  
 
 ## Methylation data: association with confounders
 
@@ -201,7 +201,7 @@ heatmap.2(big_table,  Rowv = NA, Colv = NA, scale = NULL , trace="none",  dendro
 
 It looks like PC3 are significantly correlated with Gender and Age. These variables will be controlled for in our differential methylation analysis. They regressed out the effect of Chip already. 
 
-#Methylation: Remove non-variable CpGs
+## Methylation: Remove non-variable CpGs
 
 In this section, we will remove probes found to be non-variable in buccal, placental and blood methylomes. This is published in paper by Edgar et al (2017). I will download all the files, find the overlap between the three lists, then see if those CpGs vary by more than 5% across all samples. If they are variable, keep them. If not, get em' out. 
 
@@ -245,7 +245,7 @@ for (entry in filtered_combined_list){
 
 length(good_list)
 ```
-Let's remove these probes
+Let's remove these probes.
 ```{r}
 keep <- setdiff(rownames(common_meth), good_list)
 length(keep)
@@ -254,7 +254,7 @@ common_meth <- common_meth[keep,]
 ```
 We are officially done cleaning our data!  We'll move onto the k-means clustering [stage](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd) next.  We'll return to the second half of this document at a later step.  
 
-#Assessment of differentially methylated sites
+## Assessment of differentially methylated sites
 
 Now we will find CpGs that are differentially methylated between conditions. 
 
@@ -278,7 +278,7 @@ sigCtlvsTh2high <- toptable(EbFit, coef = "CtlvsTh2high", n = Inf)
 sigth2highvslow <- toptable(EbFit, coef = "Th2highvsTh2low",n = Inf)
 ```
 
-#Figuring out what methylation probe to take
+## Figuring out what methylation probe to take
 
 ```{r}
 
