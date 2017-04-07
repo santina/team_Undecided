@@ -13,7 +13,7 @@ To begin, we conducted exploratory analysis of both the RNA-seq and methylation 
 Namely, we performed PCA using limma of the RNA-seq data with respect to the various covariates, to see if they cluster, and obtained some figures demonstrating the p-values associated between the covariates and the PCs.  
 
 ![RNA-seq](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_&_4_diff met/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-3-1.png)
-![methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_&_4_diff met/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-4-1.png)  
+![methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_&_4_diff met/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 Looking at the first figure, we can see that certain PCs do correlate with East Asian ethnicity and smoking status in the RNA-seq data, but because PCs 16, 36, and 81 explain little variance, we decided that additional batch correction was unnecessary.  In the other figure, we see that significant PCs do correlate with gender, age, and ethnicity.  To deal with this, these variables will be controlled for when we perform differential methylation analysis.   
 
