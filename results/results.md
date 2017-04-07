@@ -6,14 +6,14 @@ In this file, we walk through our results, as well as the main analyses conducte
 We'll also give a link to the source code (which is actually the .md file), and general description of the inputs and outputs of each section.  
 
 ## 0. Data Inspection
-[Source code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_&_4_diff met/Cleaning_methylation_data.md)  
+[Source code](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md)  
 *Input*: the normalized RNA-seq counts and methylation data, as downloaded from GEO.  
 *Output*: none, as we deemed that no correction was necessary.  
 To begin, we conducted exploratory analysis of both the RNA-seq and methylation data to check if further cleaning or correction was necessary.
 Namely, we performed PCA using limma of the RNA-seq data with respect to the various covariates, to see if they cluster, and obtained some figures demonstrating the p-values associated between the covariates and the PCs.  
 
-![RNA-seq](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_&_4_diff met/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-3-1.png)
-![methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_&_4_diff met/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-4-1.png)
+![RNA-seq](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-3-1.png)
+![methylation](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
 Looking at the first figure, we can see that certain PCs do correlate with East Asian ethnicity and smoking status in the RNA-seq data, but because PCs 16, 36, and 81 explain little variance, we decided that additional batch correction was unnecessary.  In the other figure, we see that significant PCs do correlate with gender, age, and ethnicity.  To deal with this, these variables will be controlled for when we perform differential methylation analysis.   
 
@@ -49,9 +49,9 @@ We then mapped each probe to their gene loci, to obtain the methylation count as
 
 First, we construct three coexpression matrices for the three groups (control, high, low).  Then we calculate the differential correlations between them by taking the absolute difference of each pairwise comparison between any two groups, representing our observations of the coexpression changes when you move from one group to another (this took around 30 hours to run).  To try and increase confidence in our significant observations being actually significant, we also performed permutation tests (using 1000 iterations).  The result of this was that some gene pairs were noted to have an FDR or p-value of 0, as those pairs were always more significant than ones produced by random draw.  The p-values of each gene-pair was stored; below, we have the p-value distributions associated with each comparison (control vs high, control vs low, and high vs low).
 
-![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/5_weighted_corr_net_%26_diff_analysis/plots/ 	figure1_control_high.png)
-![controlvlow](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/5_weighted_corr_net_%26_diff_analysis/plots/ 	figure2_control_low.png)
-![highvlow](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/5_weighted_corr_net_%26_diff_analysis/plots/ 	figure3_high_low.png)  
+![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/5_weighted_corr_net_%26_diff_analysis/plots/figure1_control_high.png)
+![controlvlow](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/5_weighted_corr_net_%26_diff_analysis/plots/figure2_control_low.png)
+![highvlow](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/5_weighted_corr_net_%26_diff_analysis/plots/figure3_high_low.png)  
 
 We can see from these figures that the difference between the co-expression profiles of Th2-high and control is much larger than that of Th2-high and low, or Th2-low and control.  This is understandable, because asthma patients should share similar profiles regardless of subtype, and we know from published literature that the expression profiles of Th2-low asthma patients are closer to control than Th2-high are to controls.  
 
