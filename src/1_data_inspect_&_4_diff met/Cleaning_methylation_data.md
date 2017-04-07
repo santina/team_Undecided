@@ -279,6 +279,7 @@ length(keep)
 ``` r
 common_meth <- common_meth[keep,]
 ```
+We are officially done cleaning our data!  We'll move onto the k-means clustering [stage](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.md) next.  We'll return to the second half of this document at a later step.  
 
 Assessment of differentially methylated sites
 =============================================
@@ -396,4 +397,4 @@ write.table(Th2lowvscontrolRESULTS, file = "data/processed_data/network_weights/
 write.table(Th2lowvshighRESULTS, file = "data/processed_data/network_weights/meth_Th2highvsTh2low_ensemblID_weights.txt", row.names = FALSE, quote = FALSE, sep = ",", col.names = TRUE)
 ```
 
-See Eric's files on differential correlation!
+Now we can head to Eric's [stage](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.md) on correlation networks and differential coexpression analysis.

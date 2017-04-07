@@ -2,7 +2,7 @@
 title: "Pathway Enrichment"
 author: "Arjun Baghela"
 date: "4/3/2017"
-output: html_document
+output: github_document
 ---
 
 Load Packages. I will be using SIGORA. It looks at pairs of genes that, as a combination, are specific to a single pathway. 
@@ -13,9 +13,9 @@ library(sigora)
 
 Read in the data. That is, the gene pair list that came out of the gene pair analysis. 
 ```{r}
-conHighRaw <- readRDS("~/Desktop/team_Undecided/data/processed_data/controlHighResults.rds")
-conLowRaw <- readRDS("~/Desktop/team_Undecided/data/processed_data/controlLowResults.rds")
-highLowRaw <- readRDS("~/Desktop/team_Undecided/data/processed_data/highLowResults.rds")
+conHighRaw <- readRDS("../../data/processed_data/controlHighResults.rds")
+conLowRaw <- readRDS("../../data/processed_data/controlLowResults.rds")
+highLowRaw <- readRDS("../../data/processed_data/highLowResults.rds")
 
 # Here, i am just getting gene pairs with an FDR of 0, But this is also arbtirary. 
 

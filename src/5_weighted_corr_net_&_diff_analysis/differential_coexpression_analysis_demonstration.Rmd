@@ -129,7 +129,6 @@ plotPermDistribution("control.th2high", secondSigGene)
 
 Next, lets look at something that's not so significant
 
-
 ```{r insigificant permutation distributions}
 
 # less significant genes
@@ -141,10 +140,11 @@ plotPermDistribution("control.th2high", firstInsigGene)
 plotPermDistribution("control.th2high", secondInsigGene)
 
 ```
+At this point, we have more than enough information to move onto the next stage in our pipeline, [network visualization](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/6_network_visualization), which starts by processing the gene pair lists produced in this step (in the non-toy example, there were three, corresponding to control vs high, control vs low, and high vs low) into something usable for Cytoscape.  We'll return to this code to plot specific gene pairs, once Cytoscape has told us which gene pairs are the most interesting to look at!  
 
 ### Coexpressions between the two groups
 
-Another cool plot we have is the expression correlation plots! We can visualize the differences between the two groups by plotting 2 different lines :D
+Now that we know which genes to look at, another cool plot we have is the expression correlation plots! We can visualize the differences between the two groups by plotting 2 different lines :D
 
 Let's try plotting the expression correlations between genes that had significant differential coexpression. (same gene pairs from before)
 
@@ -166,8 +166,8 @@ plotExpressionCorrelations("control.th2high", secondInsigGene)
 
 ```
 
-Lastly, keep in mind that what's presented here is only a toy example with 20 genes. Our full analysis has 1000 genes. Please refer to our results for the proper details. We only put together this markdown document for the purpose of demonstrating our differential coexpression analyss. 
+Lastly, keep in mind that what's presented here is only a toy example with 20 genes. Our full analysis has 1000 genes. Please refer to our [results](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/results.md) for the proper details. We only put together this markdown document for the purpose of demonstrating our differential coexpression analyss. 
 
 Thanks for reading!! :)
 
-
+For a bonus stage that didn't appear on our poster, but was deemed important enough to place here in our pipeline, please head to [pathway enrichment](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/7_pathway_enrichment/PathwayEnrichment.Rmd).
