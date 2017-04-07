@@ -5,7 +5,7 @@ Eric Chu
 
 In this markdown document, I showcase the differential coexpression analysis. I will show the intermediate data produced as well as the final plots, some of which were included in our poster.
 
-This markdown file sources two scripts that contain the actual code for the computation - [Differential Coexpression Analysis](https://www.google.ca) and [Differential Coexpression Follow-Up Analysis](https://www.google.ca). In particular, the follow up analysis script provides an interface for interacting with the data. Please refer to those individual script files if you would like to know those details. No computation is done in this markdown file. This is only for showcasing our process.
+This markdown file sources two scripts that contain the actual code for the computation - [Differential Coexpression Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_&_diff_analysis/differential_correlation.r) and [Differential Coexpression Follow-Up Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_&_diff_analysis/diff_followup_analysis.r). In particular, the follow up analysis script provides an interface for interacting with the data. Please refer to those individual script files if you would like to know those details. No computation is done in this markdown file. This is only for showcasing our process.
 
 Differential Coexpression Analysis
 ----------------------------------
@@ -128,7 +128,7 @@ pheatmap(diffCorrelations$control.th2high)
 
 ### nullDiffCorrelations
 
-In order to test for significance in the differentail coexpression analysis, we did a permutation test. This permutation test was done by randomly permuting the samples in the two group and then constructing and subtracting the resulting coexpression matrices. This process was repeated 1000 times to produce 1000 permutation values for each pair of genes. These 1000 values are then treated as the null distribution (the distribution produced by random chance). This allows us to estimate a p-value for each pair of genes. See [Differential Coexpression Analysis](https://www.google.ca) for the actual computation.
+In order to test for significance in the differentail coexpression analysis, we did a permutation test. This permutation test was done by randomly permuting the samples in the two group and then constructing and subtracting the resulting coexpression matrices. This process was repeated 1000 times to produce 1000 permutation values for each pair of genes. These 1000 values are then treated as the null distribution (the distribution produced by random chance). This allows us to estimate a p-value for each pair of genes. See [Differential Coexpression Analysis](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_&_diff_analysis/differential_correlation.r) for the actual computation. 
 
 ``` r
 # here we show 5 permutations for each gene pair (only a subset)
@@ -169,7 +169,7 @@ Next I show some possible follow analysis that can be done on the resulting data
 
 ### P-value distributions!
 
-The peak on the left shows the existence of a signal :D. This is only a toy example with 20 genes though. Our real analysis had 571 genes which had a much convincing plot. Please refer to our [poster](google.ca).
+The peak on the left shows the existence of a signal :D. This is only a toy example with 20 genes though. Our real analysis had 571 genes which had a much convincing plot. Please refer to our [poster](https://github.com/STAT540-UBC/team_Undecided/blob/master/docs/TeamUndecidedPoster.pdf).
 
 ``` r
 # first lets look at the data produced; first 20
@@ -339,10 +339,12 @@ plotPermDistribution("control.th2high", secondInsigGene)
     ## Using gene_pair as id variables
 
 ![](differential_coexpression_analysis_demonstration_files/figure-markdown_github/insigificant%20permutation%20distributions-2.png)
+At this point, we have more than enough information to move onto the next stage in our pipeline, [network visualization](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/6_network_visualization), which starts by processing the gene pair lists produced in this step (in the non-toy example, there were three, corresponding to control vs high, control vs low, and high vs low) into something usable for Cytoscape.  We'll return to this code to plot specific gene pairs, once Cytoscape has told us which gene pairs are the most interesting to look at!  
 
 ### Coexpressions between the two groups
 
-Another cool plot we have is the expression correlation plots! We can visualize the differences between the two groups by plotting 2 different lines :D
+Now that we know which genes to look at, another cool plot we have is the expression correlation plots! We can visualize the differences between the two groups by plotting 2 different lines :D
+
 
 Let's try plotting the expression correlations between genes that had significant differential coexpression. (same gene pairs from before)
 
@@ -380,6 +382,8 @@ plotExpressionCorrelations("control.th2high", secondInsigGene)
 
 ![](differential_coexpression_analysis_demonstration_files/figure-markdown_github/insigificant%20gene%20expression%20correlations-2.png)
 
-Lastly, keep in mind that what's presented here is only a toy example with 20 genes. Our full analysis has 1000 genes. Please refer to our results for the proper details. We only put together this markdown document for the purpose of demonstrating our differential coexpression analyss.
+Lastly, keep in mind that what's presented here is only a toy example with 20 genes. Our full analysis has 1000 genes. Please refer to our [results](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/results.md) for the proper details. We only put together this markdown document for the purpose of demonstrating our differential coexpression analyss. 
 
 Thanks for reading!! :)
+
+For a bonus stage that didn't appear on our poster, but was deemed important enough to place here in our pipeline, please head to [pathway enrichment](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/7_pathway_enrichment/PathwayEnrichment.Rmd).
