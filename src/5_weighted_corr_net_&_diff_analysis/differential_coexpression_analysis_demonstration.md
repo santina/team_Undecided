@@ -255,7 +255,9 @@ plotPValueDistribution("th2high.th2low")
     ## Using rowname as id variables
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
-![](differential_coexpression_analysis_demonstration_files/figure-markdown_github/pvalue%20distributions-3.png)
+![](differential_coexpression_analysis_demonstration_files/figure-markdown_github/pvalue%20distributions-3.png)  
+
+At this point, we have more than enough information to move onto the next stage in our pipeline, [network visualization](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/6_network_visualization/networkFilter.md), which starts by processing the gene pair lists produced in this step (in the non-toy example, there were three, corresponding to control vs high, control vs low, and high vs low) into something usable for Cytoscape.  We'll return to this code to plot specific gene pairs, once Cytoscape has told us which gene pairs are the most interesting to look at!  
 
 ### Permutation distributions for specific gene pairs
 
@@ -339,7 +341,6 @@ plotPermDistribution("control.th2high", secondInsigGene)
     ## Using gene_pair as id variables
 
 ![](differential_coexpression_analysis_demonstration_files/figure-markdown_github/insigificant%20permutation%20distributions-2.png)  
-At this point, we have more than enough information to move onto the next stage in our pipeline, [network visualization](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/6_network_visualization/networkFilter.md), which starts by processing the gene pair lists produced in this step (in the non-toy example, there were three, corresponding to control vs high, control vs low, and high vs low) into something usable for Cytoscape.  We'll return to this code to plot specific gene pairs, once Cytoscape has told us which gene pairs are the most interesting to look at!  
 
 ### Coexpressions between the two groups
 
