@@ -35,7 +35,7 @@ library(lumi)
 library(limma)
 library(biomaRt)
 setwd("../../")
-rna_data <- read.table(file = "data/raw_Data/GSE85567_RNASeq_normalizedcounts.txt", 
+rna_data <- read.table(file = "data/raw_data/rna_seq_data/GSE85567_RNASeq_normalizedcounts.txt", 
                                              header = TRUE,
                                              row.names = 1, 
                                              check.names = FALSE)
@@ -49,7 +49,7 @@ dim(rna_data)
 ``` r
 #next we will load the methylation data. It is really big so I saved it in 11 smaller files (github won't allow me to push anything larger than 50MB)
 meth_data <- c()
-methylation_files <- list.files("data/raw_Data/Methylation_Data", full.names = TRUE)
+methylation_files <- list.files("data/raw_data/methylation_data", full.names = TRUE)
 for (entry in 1:11){
     data <- read.table(file = methylation_files[entry], 
                                          header = TRUE, 
