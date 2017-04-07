@@ -22,7 +22,11 @@ library(tidyverse)
 library(dplyr)
 library(pheatmap)
 
+# THESE ARGUMENTS MUST BE MODIFIED ACCORDING TO YOUR SETUP
+# **** ARGUMENTS ****
 projectDirPath <- "/Users/ericchu/ws/team_Undecided/"
+# *******************
+
 
 # source(paste0(projectDirPath, "src/5_weighted_corr_net_&_diff_analysis/differential_correlation.r")) 
 
