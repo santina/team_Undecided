@@ -38,7 +38,7 @@ After, we performed differential expression analysis with the RNA-seq data using
 ## 3. Differential Methylation Analysis
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md#assessment-of-differentially-methylated-sites)  
 *Input*: the cleaned methylation data from post-data inspection; the clusters associated with each patient from the previous step.  
-*Output*: three lists (corresponding to control, high, and low) of weights associated with each gene, depending on how differentially methylated they are (the more, the stronger the weight).  
+*Output*: three lists (corresponding to control vs high, control vs low, and high vs low) of weights associated with each gene, depending on how differentially methylated they are between groups (the more, the stronger the weight).  
 
 We then mapped each probe to their gene loci, to obtain the methylation count associated with each gene for each patient.  We then performed differential methylation analysis using edgeR to obtain "weights" by taking -log2(FDR) associated with each gene for each comparison.  
 
@@ -47,28 +47,34 @@ We then mapped each probe to their gene loci, to obtain the methylation count as
 *Input*: the list of "interesting genes" from the DEA step, and the lists of gene weights from the differential methylation analysis.  
 *Output*: three gene-pair lists, with the associated weight of each edge, the unadjusted p-value, the fdr, and p-value after Bonferroni correction.  
 
-First, we construct three coexpression matrices for the three groups (control, high, low).  Then we calculate the differential correlations between them by taking the absolute difference of each pairwise comparison between any two groups, representing our observations of the coexpression changes when you move from one group to another (this took around 30 hours to run).  To try and increase confidence in our significant observations being actually significant, we also performed permutation tests (using 1000 iterations).  The result of this was that some gene pairs were noted to have an FDR or p-value of 0, as those pairs were always more significant than ones produced by random draw.  The p-values of each gene-pair was stored; below, we have the p-value distributions associated with each comparison (control vs high, control vs low, and high vs low).
+First, we added the weights as previously determined via differential methylation and added them to the expression values of each gene.  Our reasoning for doing this is that we wanted a way to select for gene pairs with both high differential co-expression and co-methylation, as this is our way of incorporating both methylation and RNA-seq data, as was one of our goals mentioned back in our proposal.  With the final network, high value edges would correspond to this.  There are some disadvantages, the main being that since both the differential expression AND differential methylation values are fused into one, it's hard to tell how much each contributes to the final edge weight.  We continue by constructing three correlation matrices for the three groups (control, high, low).  Then we calculate the differential correlations between them by taking the absolute difference of each pairwise comparison between any two groups, representing our observations of the coexpression changes when you move from one group to another (this took around 30 hours to run).  To try and increase confidence in our significant observations being actually significant, we also performed permutation tests (1000 iterations) for each gene pair.  The result of this was that some gene pairs were noted to have an FDR or p-value of 0, as those pairs were always more significant than ones produced by random draw.  The p-values of each gene pair was stored; below, we have the p-value distributions associated with each comparison (control vs high, control vs low, and high vs low).
 
 ### Control vs. Th2-High
 ![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure1_control_high.png "Control vs High")
-### Control vs Th2-Low
+### Control vs. Th2-Low
 ![controlvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure2_control_low.png "Control vs Low")
-### Th2-High vs Th2-Low
+### Th2-High vs. Th2-Low
 ![highvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/figure3_high_low.png "High vs Low")  
 
 We can see from these figures that the difference between the co-expression profiles of Th2-high and control is much larger than that of Th2-high and low, or Th2-low and control.  This is understandable, because asthma patients should share similar profiles regardless of subtype, and we know from published literature that the expression profiles of Th2-low asthma patients are closer to control than Th2-high are to controls.  
 
-After this, we took the weights as determined previously via differential methylation and added them to the absolute difference values, to obtain final "edge weights."  The outputted lists were then sent to the next stage for visualization.  
+The outputted lists were then sent to the next stage for visualization.  
 
 ## 5. Network and Gene-Pair Visualization
 [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/6_network_visualization/networkFilter.md) and [Source Code](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/5_weighted_corr_net_%26_diff_analysis/differential_coexpression_analysis_demonstration.md#permutation-distributions-for-specific-gene-pairs)  
-(Note: the first source is the processing step so that Cytoscape can use the data, the second source is looking closely at individual gene-pairs)  
+(Note: the first source is the processing step so that Cytoscape can use the data, the second source is looking closely at individual gene pairs)  
 *Input*: the three gene pair lists, with edge weights.  
 *Output*: A meta-network used for visualizing significant gene pairs, and plots of how the expression of various significant gene pairs differs.  
 
 After processing the inputs, we put them into Cytoscape for visualization.  We show some of our figures below.  
+### Control vs. Th2-High
+![controlvhigh](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/ctlVshigh_cytoscape_subnetwork_CLU "Control vs High")
+### Control vs. Th2-Low
+![controlvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/ctlVsLow_cytoscape_subnetwork_PACSIN1 "Control vs Low")
+### Th2-High vs. Th2-Low
+![highvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/lowVsHigh_cytoscape_subnetwork "High vs Low")  
 
-
+Here, the size of the node corresponds to the degree (number of edges it has), while the thickness of the edge corresponds to its weight.  
 ## 6. Pathway Enrichment
 [Source Code]()  
 *Input*: the three gene pair lists, with edge weights.  
