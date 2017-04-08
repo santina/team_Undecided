@@ -3,7 +3,7 @@ Differential Coexpression Analysis Demonstration
 Eric Chu
 2017-04-05
 
-Previously, we were looking [differential methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md#assessment-of-differentially-methylated-sites).  
+Previously, we were looking at [differential methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md#assessment-of-differentially-methylated-sites).  
 
 In this markdown document, I showcase the differential coexpression analysis. I will show the intermediate data produced as well as the final plots, some of which were included in our poster.
 
@@ -12,7 +12,7 @@ This markdown file sources two scripts that contain the actual code for the comp
 Differential Coexpression Analysis
 ----------------------------------
 
-The following script has been set up to run the differential correlation on twenty genes as an example.
+The following script has been set up to run the differential correlation on twenty genes as an example. The call to source the script is commented out as the results have been written to [this directory](https://github.com/STAT540-UBC/team_Undecided/tree/master/data/processed_data/network_weights)
 
 The result of the sourced script contain objects: networkMatrices, diffCorrelations, nullDiffCorrelations, and pValueMatrices. We wrote another script which provides an interface to interact with these data. See details below.
 
