@@ -4,7 +4,7 @@ author: "Eric Chu"
 date: '2017-04-05'
 output: github_document
 ---
-Previously, we were looking at [differential methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd#assessment-of-differentially-methylated-sites)  
+Previously, we were looking at [differential methylation](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd#assessment-of-differentially-methylated-sites).  
 
 In this markdown document, I showcase the differential coexpression analysis. I will show the intermediate data produced as well as the final plots, some of which were included in our poster. 
 
