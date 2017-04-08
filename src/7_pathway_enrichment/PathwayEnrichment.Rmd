@@ -44,11 +44,15 @@ sigoraResconHigh <- sigora(GPSrepo= kegH, level= 2, queryList = conHigh)
 sigoraResconLow <- sigora(GPSrepo= kegH, level= 2, queryList = conLow)
 sigoraReshighLow <- sigora(GPSrepo= kegH, level= 2, queryList = highLow)
 
-sigoraResconHigh$summary_results %>% head() # This is an example of the output
-sigoraResconLow$summary_results %>% head()
-sigoraReshighLow$summary_results %>% head()
+sigoraResconHigh$summary_results %>% head(30) # This is an example of the output
+sigoraResconLow$summary_results %>% head(30)
+sigoraReshighLow$summary_results %>% head(30)
 
 setdiff(sigoraResconHigh$summary_results$description,sigoraResconLow$summary_results$description) # This is a way to see differences in pathway enrichment. 
 ```
 
 We planned not do this, because we were not sure if it would be appropriate, because we are kind of losing the idea of looking at things in gene pairs. But it is definitely something we can explore more. 
+
+The control vs High pathway enrichment and Th2 low vs high pathway enrichment seem to be quite similar, many of the same pathways show up. Similar pathways come up when doing the control vs Low, but in different a order. This may not be surprising, as we only worked with about 500 genes. 
+
+
