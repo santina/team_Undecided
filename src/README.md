@@ -1,6 +1,6 @@
 # Pipeline and Source Code
 
-This folder contains the pipeline for our project, in the form of .Rmd containing our source code (.md also included, in case you wanted to see outputs).  Below, we provide the links to our different stages, for quick access.  Note that each file contains both links to the previous stage, as well as a link to the next.
+This folder contains the pipeline for our project, in the form of .Rmd containing our source code (.md also included, in case you wanted to see outputs).  Below, we provide the links to our different stages, for quick access.  Note that each file contains both a link to the previous stage, as well as one to the next.
 
 * **Data Inspection:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md)
 * **K-means Clustering for Patient Differentiation:** [.Rmd](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.Rmd) [.md](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.md)
