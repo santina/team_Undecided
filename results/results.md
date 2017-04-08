@@ -76,7 +76,7 @@ After processing the inputs and filtering out enough genes so that they can actu
 ### Th2-High vs. Th2-Low
 ![highvlow](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/lowVsHigh_cytoscape_subnetwork.png "High vs Low")  
 
-Here, the size of the node corresponds to the degree (number of edges it has), while the thickness of the edge corresponds to its weight.  Red mean that the particular edge is in the top 20% of edges, when ordered by weight.  Like this, we can see that some genes are more highly connected than anothers, which could suggest that some could be important players in asthma-related pathways.  One such gene that appeared as well-connected with high-weight edges (meaning high differential co-expression and/orl co-methylation) in the control vs. Th2-high comparison network was CLU, or clusterin, which has been implicated in other literature as an asthma-related biomarker.  Using similar requirements (genes with a decent number of higher-weight edges), we picked a couple of genes we deemed interesting to probe further into.  
+Here, the size of the node corresponds to the degree (number of edges it has), while the thickness of the edge corresponds to its weight.  Red means that the particular edge is in the top 20% of edges, when ordered by weight.  Like this, we can see that some genes are more highly connected than others, suggesting that some could be important players in asthma-related pathways.  One such gene that appeared as well-connected with high-weight edges (meaning high differential co-expression and/orl co-methylation) in the control vs. Th2-high comparison network was CLU, or clusterin, which has been implicated in other literature as an asthma-related biomarker.  Using similar requirements (genes with a decent number of higher-weight edges), we picked a couple of genes we deemed interesting to probe further into.  
 
 We then looked at permutation distributions for these genes.  For instance, below we have
 ### Control vs. Th2-High: CLU vs. USP54 distribution
@@ -166,7 +166,7 @@ Here we'll show some tables directly pulled from the source code, and talk brief
     ## 8      11.69     1843.03 350891      358.38
     ## 57      6.36      420.28 350891      358.38
   
-Here, we mainly took our gene pair lists (filtering with FDR = 0), breaking them apart into separate genes, and feeding them into KEGG.  This gave us three pathway lists, but there was a lot of overlap between them with rather odd pathways, such as osteoclast differentiation.  Some of the pathways found are promising with regards to asthma however, such as platelet activation, chemokine signalling pathway, natural killer cell mediated cytotoxicity which are associated with inflammation and immune response.  
+Here, we mainly took our gene pair lists (filtering with FDR = 0), broke them apart into separate genes, and fed them into KEGG.  This gave us three pathway lists, but there was a lot of overlap between them and included rather odd pathways, such as osteoclast differentiation.  Some of the pathways found are promising with regards to asthma however, such as platelet activation, chemokine signalling pathway, natural killer cell mediated cytotoxicity which are associated with inflammation and immune response.  
 
 We also looked at pathway differences between the control vs. high enrichment and control vs. low enrichment:  
 
