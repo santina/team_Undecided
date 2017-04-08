@@ -11,7 +11,8 @@ As a general introduction to the data, we have two main datasets, both downloade
 [Source code](https://github.com/STAT540-UBC/team_Undecided/tree/master/src/1_data_inspect_%26_4_diff%20met/Cleaning_methylation_data.md)  
 *Input*: the normalized RNA-seq counts and methylation data, as downloaded from GEO.  
 *Output*: none, as we deemed that no further correction was necessary.  
-To begin, we conducted exploratory analysis of both the RNA-seq and methylation data to check if further cleaning or correction was necessary.
+To begin, we conducted exploratory analysis of both the RNA-seq and methylation data to check if further cleaning or correction was necessary.  
+
 Namely, we examined which clinical covariates needed to be included in our differential expression analysis by using limma to determine which variables significantly correlated with principal components of the RNA-seq data. We found weak correlation between all covariates and the first 10 PCs, so no additional clinical variables were included in the linear model. We performed the same analysis in the methylation data, and found that several covariates correlated with the first 10 PCs. Therefore, all covariates for which data was complete were included in the generalized linear model.  
 
 ![rna-seq](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/figures/rnaseq.png "RNA-seq")
