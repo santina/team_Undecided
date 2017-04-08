@@ -23,6 +23,7 @@ Here are some quick links to relevant files in our repo. <br/>
 [Raw Data](https://github.com/STAT540-UBC/team_Undecided/tree/master/data/raw_data) <br/>
 [Project Proposal](https://github.com/STAT540-UBC/team_Undecided/blob/master/docs/project_proposal.md) <br/>
 [Progress Report](https://github.com/STAT540-UBC/team_Undecided/blob/master/docs/progress_report.md) <br/>
+[Results](https://github.com/STAT540-UBC/team_Undecided/blob/master/results/results.md) <br/>
 [Final Poster](https://github.com/STAT540-UBC/team_Undecided/blob/master/docs/TeamUndecidedPoster.pdf)
 
 It is clear from the proposal, progress report, and final poster that our project changed quite a bit over the weeks that we were working on our poster. Our final project describes the use of a weighted differential co-expression analysis using the transcriptomic and methylation profiles of asthmatic patients. Our goal throughout the project was further characterize Th2 High and Low asthmatic populations, as it does not appear that there is much in the literature about it. Below is a broad overview of our project. 
