@@ -5,7 +5,7 @@ Arjun Baghela
 
 Our last step was [k-means clustering](https://github.com/STAT540-UBC/team_Undecided/blob/master/src/2_kmeans_clustering/Cluster.md), where we assigned each asthma patient to a group (Th2-high or Th2-low) depending on their expression in three genes.
 
-In this document, we will perform differential expression analysis of the RNA-seq data based on the three groups (control, high, and low). The resulting three lists will be combined, and we'll filter out about 500 genes (deemed "interesting"), which will be passed to the next stage for constructing the correlation network and performing differential expression analysis.
+In this document, we will perform differential expression analysis of the RNA-seq data between the three groups (control, high, and low). The resulting three lists (control vs high, control vs low, and high vs low) will be combined, and we'll filter out about 500 genes (deemed "interesting"), which will be passed to the next stage for constructing the correlation network and performing differential expression analysis.
 Load the necessary packages.
 
 ``` r
