@@ -12,7 +12,7 @@ This markdown file sources two scripts that contain the actual code for the comp
 Differential Coexpression Analysis
 ----------------------------------
 
-The following script has been set up to run the differential correlation on twenty genes as an example. The call to source the script is commented out as the results have been written to [this directory](https://github.com/STAT540-UBC/team_Undecided/tree/master/data/processed_data/network_weights)
+The following script has been set up to run the differential correlation on twenty genes as an example. The call to source the script is commented out as the results have been written to [this directory](https://github.com/STAT540-UBC/team_Undecided/tree/master/data/processed_data/network_weights).
 
 The result of the sourced script contain objects: networkMatrices, diffCorrelations, nullDiffCorrelations, and pValueMatrices. We wrote another script which provides an interface to interact with these data. See details below.
 
